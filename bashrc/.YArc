@@ -1,0 +1,63 @@
+# for git
+alias gst='git status'
+alias gcm='git commit'
+alias gcma='git commit --amend'
+alias gct='git checkout'
+alias gctm='git checkout master'
+alias gpl='git pull'
+alias gp='git push'
+alias gd='git diff'
+alias gbr='git branch'
+alias gla='git log --all --decorate --oneline --graph'
+alias gaa='git add --all'
+alias gau='git add -u'
+function gup() { # git pull and update
+    if [ $1 ]
+    then
+        branch=$1;
+    else
+        branch="master";
+    fi
+
+    git checkout ${branch};
+    git pull --rebase origin ${branch} && git remote update --prune;
+}
+alias gsh='git stash'
+alias gclean='git stash && git stash drop'
+alias grbm='git rebase master'
+alias grbc='git rebase --continue'
+alias grb='git rebase'
+alias gcpf='gcma --no-edit && gp -f'
+alias gpf='gp -f'
+
+alias avc='cd /home/jpg/Project/PPAV/PPAV-crawler'
+alias avb='cd /home/jpg/Project/PPAV/telegram-bot'
+alias av='cd /home/jpg/Project/PPAV'
+alias gj='cd /home/jpg/Project/WorkTimeSurvey-backend'
+alias gg='cd /home/jpg/Project'
+alias po='cd /home/jpg/company/poller'
+alias tc='cd /home/jpg/company/toolcrawler'
+alias tb='cd /home/jpg/company/toolbot-core-experiment'
+alias cc='cd /home/jpg/company'
+alias yck='yarn upgrade-interactive'
+alias v='vim'
+alias k8s='kubectl'
+
+# Add git branch if its present to PS1
+color_prompt=yes
+parse_git_branch() {
+ git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+}
+if [ "$color_prompt" = yes ]; then
+ PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;31m\] $(parse_git_branch) \[\033[00m\]\$ '
+else
+ PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(parse_git_branch) \$ '
+fi
+
+GREP_OPTIONS='-nr --color=auto --exclude-dir=node_modules --exclude-dir=coverage --exclude-dir=.next --exclude-dir=apidoc --exclude-dir=.git'
+alias grep='grep $GREP_OPTIONS'
+
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
