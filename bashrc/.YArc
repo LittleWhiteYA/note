@@ -23,6 +23,7 @@ function gup() { # git pull and update
     git pull --rebase origin ${branch} && git remote update --prune;
 }
 alias gsh='git stash'
+alias gsp='git stash pop'
 alias gclean='git stash && git stash drop'
 alias grbm='git rebase master'
 alias grbc='git rebase --continue'
@@ -30,15 +31,10 @@ alias grb='git rebase'
 alias gcpf='gcma --no-edit && gp -f'
 alias gpf='gp -f'
 
-alias avc='cd /home/jpg/Project/PPAV/PPAV-crawler'
-alias avb='cd /home/jpg/Project/PPAV/telegram-bot'
-alias av='cd /home/jpg/Project/PPAV'
-alias gj='cd /home/jpg/Project/WorkTimeSurvey-backend'
-alias gg='cd /home/jpg/Project'
-alias po='cd /home/jpg/company/poller'
-alias tc='cd /home/jpg/company/toolcrawler'
-alias tb='cd /home/jpg/company/toolbot-core-experiment'
-alias cc='cd /home/jpg/company'
+alias av='cd $HOME/Project/PPAV'
+alias gj='cd $HOME/Project/WorkTimeSurvey-backend'
+alias gg='cd $HOME/Project'
+alias cc='cd $HOME/company'
 alias yck='yarn upgrade-interactive'
 alias v='vim'
 alias k8s='kubectl'
@@ -55,7 +51,7 @@ else
 fi
 
 GREP_OPTIONS='-nr --color=auto --exclude-dir=node_modules --exclude-dir=coverage --exclude-dir=.next --exclude-dir=apidoc --exclude-dir=.git'
-alias grep='grep $GREP_OPTIONS'
+alias grp='grep $GREP_OPTIONS'
 
 alias ..="cd .."
 alias ...="cd ../.."
