@@ -167,9 +167,11 @@ let g:syntastic_check_on_wq = 0
 
 let g:syntastic_loc_list_height = 5
 
+" YCM options https://github.com/Valloric/YouCompleteMe#options
 " make YCM compatible with UltiSnips
 let g:ycm_key_list_select_completion = ['<Down>']
 let g:ycm_key_list_previous_completion = ['<Up>']
+let g:ycm_key_list_stop_completion = ['<End>']
 
 " better key bindings for UltiSnipsExpandTrigger
 let g:UltiSnipsExpandTrigger = '<tab>'
