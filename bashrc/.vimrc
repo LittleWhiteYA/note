@@ -197,3 +197,6 @@ set foldmethod=indent
 set foldlevel=2
 set foldnestmax=3
 set foldenable!
+
+" auto copy words which mouse selects
+" set guioptions+=a
