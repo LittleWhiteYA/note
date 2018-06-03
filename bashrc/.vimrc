@@ -73,17 +73,28 @@ set textwidth=120
 
 set hlsearch
 
+"" inoremap只在 insert 模式下生效
+"" vnoremap只在 visual 模式下生效
+"" nnoremap只在 normal 模式下生效
 "" Press F5 to refresh vimrc
 nnoremap <F5> :source $MYVIMRC<CR>
 "" Press F6 to change hlsearch
 nnoremap <F6> :set hlsearch!<CR>
 nnoremap <F7> :set paste!<CR>
+inoremap <F7> <ESC>:set paste!<CR>i
 "" Press F8 enable to auto fix lint
 nnoremap <F8> :let syntastic_javascript_eslint_args='--fix'
     \ \| :w
     \ \| :edit
     \ \| :let syntastic_javascript_eslint_args=''<CR>
+inoremap <F8> <ESC>:let syntastic_javascript_eslint_args='--fix'
+    \ \| :w
+    \ \| :edit
+    \ \| :let syntastic_javascript_eslint_args=''<CR>i
 nnoremap <F9> :NERDTreeToggle<CR>
+
+" replace mark word without overwriting your last yank
+vnoremap p "_dp
 
 autocmd FileType javascript
     \ setlocal shiftwidth=2 |
@@ -197,6 +208,3 @@ set foldmethod=indent
 set foldlevel=2
 set foldnestmax=3
 set foldenable!
-
-" auto copy words which mouse selects
-" set guioptions+=a
