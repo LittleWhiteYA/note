@@ -1,19 +1,51 @@
+# git
+# https://git-scm.com/download/linux
+sudo add-apt-repository ppa:git-core/ppa
+sudo apt-get update
+sudo apt-get install git
+
 # docker-ce
 # https://docs.docker.com/install/linux/docker-ce/ubuntu/
-
-sudo apt-get update
 
 sudo apt-get install \
     apt-transport-https \
     ca-certificates \
     curl \
     software-properties-common
-
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
 sudo add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
    $(lsb_release -cs) \
    stable"
-
 sudo apt-get update && sudo apt-get install docker-ce
+
+# nvm
+# https://github.com/creationix/nvm
+
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+
+# Vundle
+# https://github.com/VundleVim/Vundle.vim
+
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+vim +PluginInstall +qall
+
+# htop
+sudo apt install htop
+
+# kubectl
+# https://kubernetes.io/docs/tasks/tools/install-kubectl
+sudo apt-get update && sudo apt-get install -y apt-transport-https
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+sudo touch /etc/apt/sources.list.d/kubernetes.list
+echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+sudo apt-get update
+sudo apt-get install kubectl
+
+# kube-shell
+# https://github.com/cloudnativelabs/kube-shell
+pip3 install kube-shell
+
+# helm
+# https://github.com/kubernetes/helm/blob/master/docs/install.md

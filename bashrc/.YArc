@@ -33,12 +33,12 @@ alias gcpf='gcma --no-edit && gp --force-with-lease'
 alias gpf='gp --force-with-lease'
 
 alias av='cd $HOME/Project/PPAV'
-alias gj='cd $HOME/Project/WorkTimeSurvey-backend'
+alias gj='cd $HOME/Project/goodjob'
 alias gg='cd $HOME/Project'
 alias cc='cd $HOME/company'
 alias yck='yarn upgrade-interactive'
 alias v='vim'
-alias k8s='kubectl'
+alias k8s='/home/jpg/.local/bin/kube-shell'
 
 # Add git branch if its present to PS1
 color_prompt=yes

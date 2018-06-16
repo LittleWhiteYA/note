@@ -4,25 +4,25 @@ filetype off                  " required
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+    " alternatively, pass a path where Vundle should install plugins
+    "call vundle#begin('~/some/path/here')
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-" autocomplete, https://github.com/Valloric/YouCompleteMe
-" need to compile ./install.py after install
-Plugin 'Valloric/YouCompleteMe'
-" 主要功能是相同 project 的 code 在不同 editor 下能夠保持一致
-" 會讀取 .editorconfig
-Plugin 'editorconfig/editorconfig-vim'
-" 檢查 eslint 語法
-Plugin 'scrooloose/syntastic'
-" added nerdtree
-Plugin 'scrooloose/nerdtree'
-" snippet 打縮寫會自動完成 E.g. cl => console.log
-Plugin 'SirVer/ultisnips'
-" contains snippets files and used by SirVer/ultisnips
-Plugin 'honza/vim-snippets'
+    " let Vundle manage Vundle, required
+    Plugin 'VundleVim/Vundle.vim'
+    " autocomplete, https://github.com/Valloric/YouCompleteMe
+    " need to compile ./install.py after install
+    Plugin 'Valloric/YouCompleteMe'
+    " 主要功能是相同 project 的 code 在不同 editor 下能夠保持一致
+    " 會讀取 .editorconfig
+    Plugin 'editorconfig/editorconfig-vim'
+    " 檢查 eslint 語法
+    Plugin 'scrooloose/syntastic'
+    " added nerdtree
+    Plugin 'scrooloose/nerdtree'
+    " snippet 打縮寫會自動完成 E.g. cl => console.log
+    Plugin 'SirVer/ultisnips'
+    " contains snippets files and used by SirVer/ultisnips
+    Plugin 'honza/vim-snippets'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -100,9 +100,9 @@ autocmd FileType javascript
     \ setlocal shiftwidth=2 |
     \ setlocal tabstop=2
 
-autocmd BufRead,BufNewFile ~/Project/WorkTimeSurvey-backend/*
-    \ setlocal shiftwidth=4 |
-    \ setlocal tabstop=4 |
+autocmd BufRead,BufNewFile ~/Project/goodjob/*
+    \ setlocal shiftwidth=2 |
+    \ setlocal tabstop=2 |
 
 "" 把每一行最後的空白在 :w 後自動刪掉
 "" autocmd BufWritePre * :%s/\s\+$//e
