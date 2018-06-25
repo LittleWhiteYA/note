@@ -3,6 +3,8 @@
 sudo add-apt-repository ppa:git-core/ppa
 sudo apt-get update
 sudo apt-get install git
+git config --global user.email "f46284628@gmail.com"
+git config --global user.name "LittleWhiteYA"
 
 # vim
 sudo apt-get install vim
