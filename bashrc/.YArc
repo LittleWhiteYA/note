@@ -38,7 +38,8 @@ alias gg='cd $HOME/Project'
 alias cc='cd $HOME/company'
 alias yck='yarn upgrade-interactive'
 alias v='vim'
-alias k8s='/home/jpg/.local/bin/kube-shell'
+alias k8s='kubectl'
+alias kube='/home/jpg/.local/bin/kube-shell'
 
 # Add git branch if its present to PS1
 color_prompt=yes
@@ -88,3 +89,4 @@ vim() {
 }
 
 alias vn='vim --new'
+alias ntla='ntl --autocomplete'
