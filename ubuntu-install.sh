@@ -70,3 +70,6 @@ pip3 install kube-shell
 
 # helm
 # https://github.com/kubernetes/helm/blob/master/docs/install.md
+curl -sL https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz | tar zx
+sudo mv linux-amd64/helm /usr/local/bin/helm
+rm -r linux-amd64
