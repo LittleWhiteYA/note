@@ -23,6 +23,7 @@ call vundle#begin()
     Plugin 'SirVer/ultisnips'
     " contains snippets files and used by SirVer/ultisnips
     Plugin 'honza/vim-snippets'
+    Plugin 'terryma/vim-multiple-cursors'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -208,3 +209,12 @@ set foldmethod=indent
 set foldlevel=2
 set foldnestmax=3
 set foldenable!
+
+" https://github.com/terryma/vim-multiple-cursors
+" Custom mapping
+let g:multi_cursor_select_all_word_key = '<C-a>'
+" Default mapping
+let g:multi_cursor_next_key            = '<C-n>'
+let g:multi_cursor_prev_key            = '<C-p>'
+let g:multi_cursor_skip_key            = '<C-x>'
+let g:multi_cursor_quit_key            = '<Esc>'
