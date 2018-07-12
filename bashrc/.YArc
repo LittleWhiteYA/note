@@ -39,7 +39,7 @@ alias cc='cd $HOME/company'
 alias yck='yarn upgrade-interactive'
 alias v='vim'
 alias k8s='kubectl'
-alias kube='/home/jpg/.local/bin/kube-shell'
+alias kube='$HOME/.local/bin/kube-shell'
 
 # Add git branch if its present to PS1
 color_prompt=yes
@@ -47,9 +47,9 @@ parse_git_branch() {
  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
 }
 if [ "$color_prompt" = yes ]; then
- PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;31m\] $(parse_git_branch) \[\033[00m\]\$ '
+ PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;31m\] $(parse_git_branch) \[\033[00m\]\n\$ '
 else
- PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(parse_git_branch) \$ '
+ PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(parse_git_branch)\n\$ '
 fi
 
 GREP_OPTIONS='-nr --color=auto --exclude-dir=node_modules --exclude-dir=coverage --exclude-dir=.next --exclude-dir=apidoc --exclude-dir=.git'

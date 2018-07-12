@@ -15,6 +15,13 @@ sudo apt install htop
 # tmux
 sudo apt install tmux
 
+# tlp: save your power on ubuntu
+# https://github.com/linrunner/TLP
+sudo add-apt-repository ppa:linrunner/tlp
+sudo apt-get update
+sudo apt-get install tlp tlp-rdw
+sudo tlp start
+
 # nvm
 # https://github.com/creationix/nvm
 
