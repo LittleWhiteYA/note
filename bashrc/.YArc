@@ -52,7 +52,7 @@ else
  PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(parse_git_branch)\n\$ '
 fi
 
-GREP_OPTIONS='-nr --color=auto --exclude-dir=node_modules --exclude-dir=coverage --exclude-dir=.next --exclude-dir=apidoc --exclude-dir=.git'
+GREP_OPTIONS='-nr --color=auto --exclude-dir=node_modules --exclude-dir=coverage --exclude-dir=.next --exclude-dir=apidoc --exclude-dir=.git --exclude=*.lock'
 alias grp='grep $GREP_OPTIONS'
 
 alias ..="cd .."
