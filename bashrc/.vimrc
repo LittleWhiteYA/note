@@ -95,15 +95,11 @@ inoremap <F8> <ESC>:let syntastic_javascript_eslint_args='--fix'
 nnoremap <F9> :NERDTreeToggle<CR>
 
 " replace mark word without overwriting your last yank
-vnoremap p "_dp
+vnoremap p "_dP
 
 autocmd FileType javascript
     \ setlocal shiftwidth=2 |
     \ setlocal tabstop=2
-
-autocmd BufRead,BufNewFile ~/Project/goodjob/*
-    \ setlocal shiftwidth=2 |
-    \ setlocal tabstop=2 |
 
 "" 把每一行最後的空白在 :w 後自動刪掉
 "" autocmd BufWritePre * :%s/\s\+$//e
@@ -124,7 +120,7 @@ autocmd BufRead,BufNewFile ~/Project/goodjob/*
 "" 命令模式按 Tab 自動補齊
 set wildmenu
 
-"" :inoremap ( ()<Esc>i
+:inoremap ( ()<Esc>i
 :inoremap [<CR> [<CR>]<Esc>ko
 :inoremap {<CR> {<CR>}<Esc>ko
 
@@ -132,17 +128,6 @@ set wildmenu
 set completeopt-=preview
 
 function! s:getEslint()
-    
-    " if findfile('.eslintrc.js', '.;') != ''
-    "     let eslintrc_path = findfile('.eslintrc.js', '.;')
-    " elseif findfile('.eslintrc.json', '.;') != ''
-    "     let eslintrc_path = findfile('.eslintrc.json', '.;')
-    " else
-    "     let eslintrc_path = findfile('.eslintrc', '.;')
-    " endif
-    "
-    " let eslint_path = fnamemodify(eslintrc_path, ':p:h')
-
     let eslintrc_path = finddir('.git', '.;')
     let eslint_path = fnamemodify(eslintrc_path, ':h')
 
@@ -202,7 +187,7 @@ set complete+=kspell
 
 " check one time after 4s of inactivity in normal mode
 set autoread
-au CursorHold * checktime 
+au CursorHold * checktime
 
 " code folding
 set foldmethod=indent
@@ -218,3 +203,6 @@ let g:multi_cursor_next_key            = '<C-n>'
 let g:multi_cursor_prev_key            = '<C-p>'
 let g:multi_cursor_skip_key            = '<C-x>'
 let g:multi_cursor_quit_key            = '<Esc>'
+
+set listchars=tab:→·,trail:·,extends:»,precedes:«
+set list

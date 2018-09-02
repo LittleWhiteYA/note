@@ -40,6 +40,7 @@ alias yck='yarn upgrade-interactive'
 alias v='vim'
 alias k8s='kubectl'
 alias kube='$HOME/.local/bin/kube-shell'
+alias helmd='helm --tiller-namespace default'
 
 # Add git branch if its present to PS1
 color_prompt=yes
