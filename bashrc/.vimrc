@@ -24,6 +24,8 @@ call vundle#begin()
     " contains snippets files and used by SirVer/ultisnips
     Plugin 'honza/vim-snippets'
     Plugin 'terryma/vim-multiple-cursors'
+    " show git diff
+    Plugin 'airblade/vim-gitgutter'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -96,6 +98,8 @@ nnoremap <F9> :NERDTreeToggle<CR>
 
 " replace mark word without overwriting your last yank
 vnoremap p "_dP
+nnoremap ln :lnext<CR>
+nnoremap lp :lprevious<CR>
 
 autocmd FileType javascript
     \ setlocal shiftwidth=2 |
@@ -121,6 +125,8 @@ autocmd FileType javascript
 set wildmenu
 
 :inoremap ( ()<Esc>i
+:inoremap (<End> (<Esc>i<End>
+:inoremap () ()
 :inoremap [<CR> [<CR>]<Esc>ko
 :inoremap {<CR> {<CR>}<Esc>ko
 
