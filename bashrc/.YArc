@@ -6,7 +6,7 @@ alias gct='git checkout'
 alias gm='git checkout master'
 alias gpl='git pull'
 alias gp='git push'
-alias gpft='gp --follow-tags'
+alias gpt='gp --follow-tags'
 alias gd='git diff'
 alias gbr='git branch'
 alias gla='git log --all --decorate --oneline --graph'
@@ -36,21 +36,18 @@ alias av='cd $HOME/Project/PPAV'
 alias gj='cd $HOME/Project/goodjob'
 alias gg='cd $HOME/Project'
 alias cc='cd $HOME/company'
-alias yck='yarn upgrade-interactive'
-alias v='vim'
-alias k8s='kubectl'
-alias kube='$HOME/.local/bin/kube-shell'
-alias helmd='helm --tiller-namespace default'
+alias yck='yarn upgrade-interactive --latest'
 
 # Add git branch if its present to PS1
 color_prompt=yes
 parse_git_branch() {
  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
 }
+
 if [ "$color_prompt" = yes ]; then
- PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;31m\] $(parse_git_branch) \[\033[00m\]\n\$ '
+ PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;31m\] $(parse_git_branch) \[\033[00m\]$(kube_ps1)\n\$ '
 else
- PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(parse_git_branch)\n\$ '
+ PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(parse_git_branch)$(kube_ps1)\n\$ '
 fi
 
 GREP_OPTIONS='-nr --color=auto --exclude-dir=node_modules --exclude-dir=coverage --exclude-dir=.next --exclude-dir=apidoc --exclude-dir=.git --exclude=*.lock'
@@ -62,7 +59,7 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
 # let vim not to open new file if file does not exist.
-vim() {
+function vim() {
     local args=("$@")
     local new=0
 
@@ -89,5 +86,33 @@ vim() {
     command "$FUNCNAME" "${args[@]}"
 }
 
+alias v='vim'
 alias vn='vim --new'
 alias ntla='ntl --autocomplete'
+alias watch='watch '
+
+# k8s and helm
+source <(kubectl completion bash) # setup autocomplete in bash into the current shell, bash-completion package should be installed first.
+source <(helm completion bash)
+
+## https://github.com/jonmosco/kube-ps1
+source /home/littlewhiteya/Project/kube-ps1.sh
+
+function helm() {
+    if [[ "$1" == "upgrade" ]] && [[ "$@" != *"--help"* ]]
+    then
+        helm repo update
+    fi
+    $(which helm) "$@"
+}
+
+function helmd() {
+    if [[ "$1" == "upgrade" ]] && [[ "$@" != *"--help"* ]]
+    then
+        helm repo update
+    fi
+    $(which helm) --tiller-namespace default "$@"
+}
+
+alias k8s='kubectl'
+alias kube='$HOME/.local/bin/kube-shell'

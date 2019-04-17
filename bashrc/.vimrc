@@ -198,7 +198,7 @@ au CursorHold * checktime
 " code folding
 set foldmethod=indent
 set foldlevel=2
-set foldnestmax=3
+" set foldnestmax=3
 set foldenable!
 
 " https://github.com/terryma/vim-multiple-cursors
@@ -212,3 +212,6 @@ let g:multi_cursor_quit_key            = '<Esc>'
 
 set listchars=tab:→·,trail:·,extends:»,precedes:«
 set list
+
+" set updatetime for vim-gitgutter
+set updatetime=1000
