@@ -9,7 +9,7 @@ alias gp='git push'
 alias gpt='gp --follow-tags'
 alias gd='git diff'
 alias gbr='git branch'
-alias gla='git log --all --decorate --oneline --graph'
+alias gla='git log --all --decorate --oneline --graph --color'
 alias gaa='git add --all'
 alias gau='git add -u'
 function gup() { # git pull and update
@@ -51,7 +51,7 @@ else
 fi
 
 GREP_OPTIONS='-nr --color=auto --exclude-dir=node_modules --exclude-dir=coverage --exclude-dir=.next --exclude-dir=apidoc --exclude-dir=.git --exclude=*.lock'
-alias grp='grep $GREP_OPTIONS'
+alias g='grep $GREP_OPTIONS'
 
 alias ..="cd .."
 alias ...="cd ../.."
@@ -62,6 +62,11 @@ alias .....="cd ../../../.."
 function vim() {
     local args=("$@")
     local new=0
+
+    if (( $# == 0 )); then
+        echo "I need to eat filename to open!"
+        return 1
+    fi
 
     # Check for `--new'.
     for ((i = 0; i < ${#args[@]}; ++i)); do
@@ -86,12 +91,16 @@ function vim() {
     command "$FUNCNAME" "${args[@]}"
 }
 
-alias v='vim'
+# https://github.com/junegunn/fzf
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+alias v='vim $(fzf)'
+alias vv='vim'
 alias vn='vim --new'
 alias ntla='ntl --autocomplete'
 alias watch='watch '
 
 # k8s and helm
+
 source <(kubectl completion bash) # setup autocomplete in bash into the current shell, bash-completion package should be installed first.
 source <(helm completion bash)
 
@@ -115,4 +124,5 @@ function helmd() {
 }
 
 alias k8s='kubectl'
+complete -o default -o nospace -F __start_kubectl k8s
 alias kube='$HOME/.local/bin/kube-shell'

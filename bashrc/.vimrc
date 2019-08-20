@@ -23,6 +23,7 @@ call vundle#begin()
     Plugin 'SirVer/ultisnips'
     " contains snippets files and used by SirVer/ultisnips
     Plugin 'honza/vim-snippets'
+    " multiple selections
     Plugin 'terryma/vim-multiple-cursors'
     " show git diff
     Plugin 'airblade/vim-gitgutter'
