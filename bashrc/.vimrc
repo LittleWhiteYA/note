@@ -216,3 +216,7 @@ set list
 
 " set updatetime for vim-gitgutter
 set updatetime=1000
+
+" gf, https://vim.fandom.com/wiki/Open_file_under_cursor
+" typically you don't put the .js on your require('./path/to/a/js/file')
+set suffixesadd+=.js

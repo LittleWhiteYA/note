@@ -25,7 +25,7 @@ sudo tlp start
 # nvm
 # https://github.com/creationix/nvm
 
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 nvm install node
 
 # Vundle
@@ -63,7 +63,7 @@ sudo apt-get update && sudo apt-get install docker-ce
 
 # docker-compose
 # https://docs.docker.com/compose/install/#install-compose
-sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
 # kubectl
@@ -82,6 +82,6 @@ pip3 install kube-shell
 
 # helm
 # https://github.com/kubernetes/helm/blob/master/docs/install.md
-curl -sL https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz | tar zx
+curl -sL https://get.helm.sh/helm-v2.14.3-linux-amd64.tar.gz | tar zx
 sudo mv linux-amd64/helm /usr/local/bin/helm
 rm -r linux-amd64

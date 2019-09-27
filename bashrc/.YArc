@@ -58,6 +58,8 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
+alias open='nautilus'
+
 # let vim not to open new file if file does not exist.
 function vim() {
     local args=("$@")
@@ -115,7 +117,7 @@ function helm() {
     $(which helm) "$@"
 }
 
-function helmd() {
+function hd() {
     if [[ "$1" == "upgrade" ]] && [[ "$@" != *"--help"* ]]
     then
         helm repo update
@@ -123,6 +125,10 @@ function helmd() {
     $(which helm) --tiller-namespace default "$@"
 }
 
-alias k8s='kubectl'
-complete -o default -o nospace -F __start_kubectl k8s
+alias k='kubectl'
+complete -o default -o nospace -F __start_kubectl k
 alias kube='$HOME/.local/bin/kube-shell'
+
+alias sea='kubectl config use-context yoctol-sea-1'
+alias stag='kubectl config use-context yoctol-sea-staging-1'
+alias nlu='kubectl config use-context yoctol-sea-nlu-1'
