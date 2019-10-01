@@ -15,6 +15,9 @@ sudo apt install htop
 # tmux
 sudo apt install tmux
 
+# curl
+sudo apt install curl
+
 # tlp: save your power on ubuntu
 # https://github.com/linrunner/TLP
 sudo add-apt-repository ppa:linrunner/tlp
@@ -39,7 +42,7 @@ vim +PluginInstall +qall
 sudo apt-get install build-essential cmake
 sudo apt-get install python-dev python3-dev
 source ~/.bashrc
-./.vim/bundle/YouCompleteMe/install.py --js-completer
+~/.vim/bundle/YouCompleteMe/install.py --js-completer
 
 ## christoomey/vim-system-copy
 ## https://github.com/christoomey/vim-system-copy
