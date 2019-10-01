@@ -41,6 +41,14 @@ sudo apt-get install python-dev python3-dev
 source ~/.bashrc
 ./.vim/bundle/YouCompleteMe/install.py --js-completer
 
+## christoomey/vim-system-copy
+## https://github.com/christoomey/vim-system-copy
+sudo apt-get install xsel
+
+## fzf https://github.com/junegunn/fzf
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install
+
 # yarn
 # https://yarnpkg.com/lang/en/docs/install/#debian-stable
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -

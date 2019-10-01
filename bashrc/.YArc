@@ -39,6 +39,8 @@ alias cc='cd $HOME/company'
 alias yck='yarn upgrade-interactive --latest'
 
 # Add git branch if its present to PS1
+## https://github.com/jonmosco/kube-ps1
+source $HOME/Project/kube-ps1.sh
 color_prompt=yes
 parse_git_branch() {
  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
@@ -105,9 +107,6 @@ alias watch='watch '
 
 source <(kubectl completion bash) # setup autocomplete in bash into the current shell, bash-completion package should be installed first.
 source <(helm completion bash)
-
-## https://github.com/jonmosco/kube-ps1
-source /home/littlewhiteya/Project/kube-ps1.sh
 
 function helm() {
     if [[ "$1" == "upgrade" ]] && [[ "$@" != *"--help"* ]]

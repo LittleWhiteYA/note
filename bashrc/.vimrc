@@ -9,24 +9,36 @@ call vundle#begin()
 
     " let Vundle manage Vundle, required
     Plugin 'VundleVim/Vundle.vim'
+
     " autocomplete, https://github.com/Valloric/YouCompleteMe
     " need to compile ./install.py after install
     Plugin 'Valloric/YouCompleteMe'
+
     " 主要功能是相同 project 的 code 在不同 editor 下能夠保持一致
     " 會讀取 .editorconfig
     Plugin 'editorconfig/editorconfig-vim'
+
     " 檢查 eslint 語法
     Plugin 'scrooloose/syntastic'
+
     " added nerdtree
     Plugin 'scrooloose/nerdtree'
+
     " snippet 打縮寫會自動完成 E.g. cl => console.log
     Plugin 'SirVer/ultisnips'
+
     " contains snippets files and used by SirVer/ultisnips
     Plugin 'honza/vim-snippets'
+
     " multiple selections
     Plugin 'terryma/vim-multiple-cursors'
+
     " show git diff
     Plugin 'airblade/vim-gitgutter'
+
+    " https://github.com/christoomey/vim-system-copy
+    " enable to copy something in vim to system clipboard
+    Plugin 'christoomey/vim-system-copy'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
