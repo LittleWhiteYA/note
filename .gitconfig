@@ -1,0 +1,19 @@
+[user]
+    email = f46284628@gmail.com
+    name = LittleWhiteYA
+[alias]
+    br = branch
+    ct = checkout
+    cm = commit
+    p = push
+
+    up = "!f() { git checkout master; \
+        git pull; \
+        git remote update --prune; }; f"
+    upst = "!f() { git checkout $1; \
+        git pull upstream $1; \
+        git remote update --prune; }; f"
+[core]
+    excludesfile = ~/.gitignore
+[push]
+    default = current
