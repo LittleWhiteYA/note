@@ -3,20 +3,9 @@
 sudo add-apt-repository ppa:git-core/ppa
 sudo apt-get update
 sudo apt-get install git
-git config --global user.email "f46284628@gmail.com"
-git config --global user.name "LittleWhiteYA"
 
-# vim
-sudo apt-get install vim
-
-# htop
-sudo apt install htop
-
-# tmux
-sudo apt install tmux
-
-# curl
-sudo apt install curl
+# vim, htop, tmux, curl
+sudo apt install vim htop tmux curl
 
 # tlp: save your power on ubuntu
 # https://github.com/linrunner/TLP
@@ -30,6 +19,10 @@ sudo tlp start
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 nvm install node
+npm install -g ntl pm2 eslint
+
+# libinput-gestures
+# https://github.com/bulletmark/libinput-gestures
 
 # Vundle
 # https://github.com/VundleVim/Vundle.vim
@@ -79,12 +72,9 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 # kubectl
 # https://kubernetes.io/docs/tasks/tools/install-kubectl
-sudo apt-get update && sudo apt-get install -y apt-transport-https
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-sudo touch /etc/apt/sources.list.d/kubernetes.list
-echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
-sudo apt-get update
-sudo apt-get install kubectl
+curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
 
 # kube-shell
 # https://github.com/cloudnativelabs/kube-shell
@@ -96,3 +86,5 @@ pip3 install kube-shell
 curl -sL https://get.helm.sh/helm-v2.14.3-linux-amd64.tar.gz | tar zx
 sudo mv linux-amd64/helm /usr/local/bin/helm
 rm -r linux-amd64
+## helm-edit
+helm plugin install https://github.com/mstrzele/helm-edit
