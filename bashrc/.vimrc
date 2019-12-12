@@ -119,7 +119,7 @@ autocmd FileType javascript
     \ setlocal tabstop=2
 
 "" 把每一行最後的空白在 :w 後自動刪掉
-"" autocmd BufWritePre * :%s/\s\+$//e
+autocmd BufWritePre * :%s/\s\+$//e
 
 
 "" enable backspace key under insert mode
@@ -164,6 +164,7 @@ endif
 let g:syntastic_javascript_checkers = ['eslint']
 " let g:syntastic_javascript_eslint_exe = 'npm run lint --'
 " let g:syntastic_javascript_eslint_args = '--fix'
+let g:syntastic_python_checkers = ['flake8']
 
 "" run :mes then you can debug
 " let g:syntastic_debug = 3

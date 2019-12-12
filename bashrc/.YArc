@@ -34,8 +34,8 @@ alias gpf='gp --force-with-lease'
 
 alias av='cd $HOME/Project/PPAV'
 alias gj='cd $HOME/Project/goodjob'
-alias gg='cd $HOME/Project'
-alias cc='cd $HOME/company'
+alias dd='cd $HOME/Project'
+alias cc='cd $HOME/yoctol'
 alias yck='yarn upgrade-interactive --latest'
 
 # Add git branch if its present to PS1
@@ -54,6 +54,7 @@ fi
 
 GREP_OPTIONS='-nr --color=auto --exclude-dir=node_modules --exclude-dir=coverage --exclude-dir=.next --exclude-dir=apidoc --exclude-dir=.git --exclude=*.lock'
 alias g='grep $GREP_OPTIONS'
+alias gg='grep'
 
 alias ..="cd .."
 alias ...="cd ../.."
