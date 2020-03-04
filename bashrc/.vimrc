@@ -40,6 +40,12 @@ call vundle#begin()
     " enable to copy something in vim to system clipboard
     Plugin 'christoomey/vim-system-copy'
 
+    " https://github.com/scrooloose/nerdcommenter
+    Plugin 'scrooloose/nerdcommenter'
+
+    " https://github.com/leafgarland/typescript-vim
+    Plugin 'leafgarland/typescript-vim'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -100,13 +106,17 @@ nnoremap <F7> :set paste!<CR>
 inoremap <F7> <ESC>:set paste!<CR>i
 "" Press F8 enable to auto fix lint
 nnoremap <F8> :let syntastic_javascript_eslint_args='--fix'
+    \ \| :let syntastic_typescript_eslint_args='--fix'<CR>
     \ \| :w
     \ \| :edit
-    \ \| :let syntastic_javascript_eslint_args=''<CR>
+    \ \| :let syntastic_javascript_eslint_args=''
+    \ \| :let syntastic_typescript_eslint_args=''<CR>
 inoremap <F8> <ESC>:let syntastic_javascript_eslint_args='--fix'
+    \ \| :let syntastic_typescript_eslint_args='--fix'<CR>
     \ \| :w
     \ \| :edit
-    \ \| :let syntastic_javascript_eslint_args=''<CR>i
+    \ \| :let syntastic_javascript_eslint_args=''
+    \ \| :let syntastic_typescript_eslint_args=''<CR>i
 nnoremap <F9> :NERDTreeToggle<CR>
 
 " replace mark word without overwriting your last yank
@@ -114,12 +124,17 @@ vnoremap p "_dP
 nnoremap ln :lnext<CR>
 nnoremap lp :lprevious<CR>
 
+" Use CTRL-S for saving
+noremap <C-S> :update<CR>
+vnoremap <C-S> <C-C>:update<CR>
+inoremap <C-S> <C-O>:update<CR>
+
 autocmd FileType javascript
     \ setlocal shiftwidth=2 |
     \ setlocal tabstop=2
 
 "" 把每一行最後的空白在 :w 後自動刪掉
-autocmd BufWritePre * :%s/\s\+$//e
+" autocmd BufWritePre * :%s/\s\+$//e
 
 
 "" enable backspace key under insert mode
@@ -157,13 +172,16 @@ let eslint = s:getEslint()
 
 if executable(eslint)
     let g:syntastic_javascript_eslint_exe = eslint
+    let g:syntastic_typescript_eslint_exe = eslint
 else
     let g:syntastic_javascript_eslint_exe = 'eslint'
+    let g:syntastic_typescript_eslint_exe = 'eslint'
 "    let g:syntastic_javascript_eslint_exe = '$(npm bin)/eslint'
 endif
 let g:syntastic_javascript_checkers = ['eslint']
 " let g:syntastic_javascript_eslint_exe = 'npm run lint --'
 " let g:syntastic_javascript_eslint_args = '--fix'
+let g:syntastic_typescript_checkers = ['eslint']
 let g:syntastic_python_checkers = ['flake8']
 
 "" run :mes then you can debug
@@ -177,6 +195,8 @@ set statusline+=%*
 set statusline+=%F
 " let statusline always visible
 set laststatus=2
+" modified tag
+set statusline+=\ %m
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -233,3 +253,6 @@ set updatetime=1000
 " gf, https://vim.fandom.com/wiki/Open_file_under_cursor
 " typically you don't put the .js on your require('./path/to/a/js/file')
 set suffixesadd+=.js
+
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1

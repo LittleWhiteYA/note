@@ -4,6 +4,7 @@ alias gcm='git commit'
 alias gcma='git commit --amend'
 alias gct='git checkout'
 alias gm='git checkout master'
+alias gcd='git checkout develop'
 alias gpl='git pull'
 alias gp='git push'
 alias gpt='gp --follow-tags'
@@ -37,6 +38,10 @@ alias gj='cd $HOME/Project/goodjob'
 alias dd='cd $HOME/Project'
 alias cc='cd $HOME/yoctol'
 alias yck='yarn upgrade-interactive --latest'
+
+alias up='sudo apt update'
+alias ugl='apt list --upgradable'
+alias ug='sudo apt upgrade'
 
 # Add git branch if its present to PS1
 ## https://github.com/jonmosco/kube-ps1
@@ -92,8 +97,20 @@ function vim() {
         done
     fi
 
+    # https://vim.fandom.com/wiki/Map_Ctrl-S_to_save_current_or_new_files
+    local STTYOPTS="$(stty --save)"
+    stty stop '' -ixoff
+
     # Use `command' to invoke the vim binary rather than this function.
     command "$FUNCNAME" "${args[@]}"
+
+    stty "$STTYOPTS"
+}
+
+# ignore cd with no argument
+# https://stackoverflow.com/questions/22327883/how-to-disable-cd-command-line
+function cd() {
+    (( $# > 0)) && builtin cd "$@"
 }
 
 # https://github.com/junegunn/fzf
