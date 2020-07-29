@@ -26,7 +26,6 @@ function gup() { # git pull and update
 }
 alias gsh='git stash'
 alias gsp='git stash pop'
-alias gclean='git stash && git stash drop'
 alias grbm='git rebase master'
 alias grbc='git rebase --continue'
 alias grb='git rebase'
@@ -68,6 +67,7 @@ alias .....="cd ../../../.."
 
 alias open='nautilus'
 
+alias vi='vim'
 # let vim not to open new file if file does not exist.
 function vim() {
     local args=("$@")
@@ -148,7 +148,10 @@ alias k='kubectl'
 alias kp='kubectl get po'
 complete -o default -o nospace -F __start_kubectl k
 alias kube='$HOME/.local/bin/kube-shell'
+alias hgv='h get values'
 
 alias sea='kubectl config use-context yoctol-sea-1'
 alias stag='kubectl config use-context yoctol-sea-staging-1'
 alias nlu='kubectl config use-context yoctol-sea-nlu-1'
+
+source $HOME/.poetry/env

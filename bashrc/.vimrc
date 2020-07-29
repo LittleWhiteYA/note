@@ -30,6 +30,7 @@ call vundle#begin()
     " contains snippets files and used by SirVer/ultisnips
     Plugin 'honza/vim-snippets'
 
+    " https://github.com/terryma/vim-multiple-cursors
     " multiple selections
     Plugin 'terryma/vim-multiple-cursors'
 
@@ -45,6 +46,9 @@ call vundle#begin()
 
     " https://github.com/leafgarland/typescript-vim
     Plugin 'leafgarland/typescript-vim'
+
+    " black for python, https://black.readthedocs.io/en/stable/editor_integration.html
+    Plugin 'psf/black'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -104,19 +108,6 @@ nnoremap <F5> :source $MYVIMRC<CR>
 nnoremap <F6> :set hlsearch!<CR>
 nnoremap <F7> :set paste!<CR>
 inoremap <F7> <ESC>:set paste!<CR>i
-"" Press F8 enable to auto fix lint
-nnoremap <F8> :let syntastic_javascript_eslint_args='--fix'
-    \ \| :let syntastic_typescript_eslint_args='--fix'<CR>
-    \ \| :w
-    \ \| :edit
-    \ \| :let syntastic_javascript_eslint_args=''
-    \ \| :let syntastic_typescript_eslint_args=''<CR>
-inoremap <F8> <ESC>:let syntastic_javascript_eslint_args='--fix'
-    \ \| :let syntastic_typescript_eslint_args='--fix'<CR>
-    \ \| :w
-    \ \| :edit
-    \ \| :let syntastic_javascript_eslint_args=''
-    \ \| :let syntastic_typescript_eslint_args=''<CR>i
 nnoremap <F9> :NERDTreeToggle<CR>
 
 " replace mark word without overwriting your last yank
@@ -132,6 +123,25 @@ inoremap <C-S> <C-O>:update<CR>
 autocmd FileType javascript
     \ setlocal shiftwidth=2 |
     \ setlocal tabstop=2
+
+"" Press F8 enable to auto fix lint
+autocmd FileType python nnoremap <F8> :Black<CR>
+    \ \| :update<CR>
+autocmd FileType python inoremap <F8> <ESC>:Black<CR>
+    \ \| :update<CR>i
+
+autocmd FileType javascript,typescript nnoremap <F8> :let syntastic_javascript_eslint_args='--fix'
+    \ \| :let syntastic_typescript_eslint_args='--fix'<CR>
+    \ \| :w
+    \ \| :edit
+    \ \| :let syntastic_javascript_eslint_args=''
+    \ \| :let syntastic_typescript_eslint_args=''<CR>
+autocmd FileType javascript,typescript inoremap <F8> <ESC>:let syntastic_javascript_eslint_args='--fix'
+    \ \| :let syntastic_typescript_eslint_args='--fix'<CR>
+    \ \| :w
+    \ \| :edit
+    \ \| :let syntastic_javascript_eslint_args=''
+    \ \| :let syntastic_typescript_eslint_args=''<CR>i
 
 "" 把每一行最後的空白在 :w 後自動刪掉
 " autocmd BufWritePre * :%s/\s\+$//e
@@ -176,13 +186,12 @@ if executable(eslint)
 else
     let g:syntastic_javascript_eslint_exe = 'eslint'
     let g:syntastic_typescript_eslint_exe = 'eslint'
-"    let g:syntastic_javascript_eslint_exe = '$(npm bin)/eslint'
 endif
 let g:syntastic_javascript_checkers = ['eslint']
-" let g:syntastic_javascript_eslint_exe = 'npm run lint --'
-" let g:syntastic_javascript_eslint_args = '--fix'
 let g:syntastic_typescript_checkers = ['eslint']
 let g:syntastic_python_checkers = ['flake8']
+let g:syntastic_python_flake8_exec = 'poetry'
+let g:syntastic_python_flake8_args = ['run', 'flake8']
 
 "" run :mes then you can debug
 " let g:syntastic_debug = 3
@@ -214,6 +223,9 @@ let g:ycm_key_list_stop_completion = ['<End>']
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+
+" :h UltiSnips-how-snippets-are-loaded
+let g:UltiSnipsSnippetDirectories = ['UltiSnips', 'mySnippets']
 
 " close vim if the only window left open is a NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
