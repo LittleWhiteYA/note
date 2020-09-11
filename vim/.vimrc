@@ -21,7 +21,7 @@ call vundle#begin()
     " 檢查 eslint 語法
     Plugin 'scrooloose/syntastic'
 
-    " added nerdtree
+    " https://github.com/preservim/nerdtree
     Plugin 'scrooloose/nerdtree'
 
     " snippet 打縮寫會自動完成 E.g. cl => console.log
@@ -49,6 +49,12 @@ call vundle#begin()
 
     " black for python, https://black.readthedocs.io/en/stable/editor_integration.html
     Plugin 'psf/black'
+
+    " https://github.com/majutsushi/tagbar
+    Plugin 'majutsushi/tagbar'
+
+    " https://github.com/ludovicchabant/vim-gutentags
+    Plugin 'ludovicchabant/vim-gutentags'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -85,6 +91,10 @@ set shiftwidth=4
 "" 自動縮排 (優於 auto indent)
 set smartindent
 
+" 開啟 vim 的智慧大小寫搜尋
+set smartcase
+set ignorecase
+
 "" 顯示目前的游標位置
 set cursorline
 
@@ -98,6 +108,8 @@ set formatoptions+=r
 set textwidth=120
 
 set hlsearch
+
+set noswapfile
 
 "" inoremap只在 insert 模式下生效
 "" vnoremap只在 visual 模式下生效
@@ -119,29 +131,6 @@ nnoremap lp :lprevious<CR>
 noremap <C-S> :update<CR>
 vnoremap <C-S> <C-C>:update<CR>
 inoremap <C-S> <C-O>:update<CR>
-
-autocmd FileType javascript
-    \ setlocal shiftwidth=2 |
-    \ setlocal tabstop=2
-
-"" Press F8 enable to auto fix lint
-autocmd FileType python nnoremap <F8> :Black<CR>
-    \ \| :update<CR>
-autocmd FileType python inoremap <F8> <ESC>:Black<CR>
-    \ \| :update<CR>i
-
-autocmd FileType javascript,typescript nnoremap <F8> :let syntastic_javascript_eslint_args='--fix'
-    \ \| :let syntastic_typescript_eslint_args='--fix'<CR>
-    \ \| :w
-    \ \| :edit
-    \ \| :let syntastic_javascript_eslint_args=''
-    \ \| :let syntastic_typescript_eslint_args=''<CR>
-autocmd FileType javascript,typescript inoremap <F8> <ESC>:let syntastic_javascript_eslint_args='--fix'
-    \ \| :let syntastic_typescript_eslint_args='--fix'<CR>
-    \ \| :w
-    \ \| :edit
-    \ \| :let syntastic_javascript_eslint_args=''
-    \ \| :let syntastic_typescript_eslint_args=''<CR>i
 
 "" 把每一行最後的空白在 :w 後自動刪掉
 " autocmd BufWritePre * :%s/\s\+$//e
@@ -170,28 +159,6 @@ set wildmenu
 
 "" 關掉 scratch 預覽
 set completeopt-=preview
-
-function! s:getEslint()
-    let eslintrc_path = finddir('.git', '.;')
-    let eslint_path = fnamemodify(eslintrc_path, ':h')
-
-    return eslint_path.'/node_modules/.bin/eslint'
-endfunction
-
-let eslint = s:getEslint()
-
-if executable(eslint)
-    let g:syntastic_javascript_eslint_exe = eslint
-    let g:syntastic_typescript_eslint_exe = eslint
-else
-    let g:syntastic_javascript_eslint_exe = 'eslint'
-    let g:syntastic_typescript_eslint_exe = 'eslint'
-endif
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_typescript_checkers = ['eslint']
-let g:syntastic_python_checkers = ['flake8']
-let g:syntastic_python_flake8_exec = 'poetry'
-let g:syntastic_python_flake8_args = ['run', 'flake8']
 
 "" run :mes then you can debug
 " let g:syntastic_debug = 3
@@ -244,7 +211,7 @@ au CursorHold * checktime
 " code folding
 set foldmethod=indent
 set foldlevel=2
-" set foldnestmax=3
+set foldnestmax=3
 set foldenable!
 
 " https://github.com/terryma/vim-multiple-cursors
@@ -262,9 +229,21 @@ set list
 " set updatetime for vim-gitgutter
 set updatetime=1000
 
-" gf, https://vim.fandom.com/wiki/Open_file_under_cursor
-" typically you don't put the .js on your require('./path/to/a/js/file')
-set suffixesadd+=.js
-
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1
+
+" keep undo history even exit file
+" set undofile
+
+" tagbar
+autocmd BufEnter * if &filetype != 'javascript' | call tagbar#autoopen(1)
+
+let g:tagbar_position = 'left'
+let g:tagbar_width = 30
+let g:tagbar_sort = 0
+" https://github.com/majutsushi/tagbar/issues/568
+" waiting for https://github.com/majutsushi/tagbar/issues/635
+let g:tagbar_use_cache = 0
+
+let g:gutentags_project_root = ['.git']
+" let g:gutentags_trace = 1
