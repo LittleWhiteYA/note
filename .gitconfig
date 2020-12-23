@@ -15,5 +15,10 @@
         git remote update --prune; }; f"
 [core]
     excludesfile = ~/.gitignore
+    ; pager = ~/yoctol/diff-so-fancy/diff-so-fancy | less --tabs=4 -RFX
 [push]
     default = current
+; [color]
+;     ui = true
+; [diff-so-fancy]
+;     markEmptyLines = false
