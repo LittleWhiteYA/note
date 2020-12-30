@@ -14,24 +14,13 @@ services:
       - RABBITMQ_DEFAULT_USER=yoctol
       - RABBITMQ_DEFAULT_PASS=yoctol
   postgres:
-    image: postgres:10
+    image: postgres:10.15
     container_name: postgres
     restart: on-failure
     volumes:
       - "pg-data:/var/lib/postgresql/data"
     ports:
       - "5432:5432"
-  pgadmin4:
-    image: dpage/pgadmin4:4.13
-    container_name: pgadmin4
-    restart: on-failure
-    volumes:
-      - "pgadmin4-data:/var/lib/pgadmin"
-    ports:
-      - "7777:80"
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=pg@yoctol.com
-      - PGADMIN_DEFAULT_PASSWORD=1234
   mongo:
     image: mongo:4.0
     container_name: mongo
@@ -40,6 +29,7 @@ services:
       - "mongo-data:/data/db"
     ports:
       - "27017:27017"
+    command: ["--replSet", "rs0"]
 
 volumes:
   rabbitmq-data:
@@ -48,9 +38,6 @@ volumes:
   pg-data:
     external:
       name: pg-data
-  pgadmin4-data:
-    external:
-      name: pgadmin4-data
   mongo-data:
     external:
       name: mongo-data
