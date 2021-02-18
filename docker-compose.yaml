@@ -14,7 +14,7 @@ services:
       - RABBITMQ_DEFAULT_USER=yoctol
       - RABBITMQ_DEFAULT_PASS=yoctol
   postgres:
-    image: postgres:10.15
+    image: postgres:12.5
     container_name: postgres
     restart: on-failure
     volumes:
@@ -22,7 +22,7 @@ services:
     ports:
       - "5432:5432"
   mongo:
-    image: mongo:4.0
+    image: mongo:4.2
     container_name: mongo
     restart: on-failure
     volumes:

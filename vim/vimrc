@@ -56,6 +56,9 @@ call vundle#begin()
     " https://github.com/ludovicchabant/vim-gutentags
     Plugin 'ludovicchabant/vim-gutentags'
 
+    " https://github.com/google/vim-searchindex
+    Plugin 'google/vim-searchindex'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -210,7 +213,7 @@ au CursorHold * checktime
 
 " code folding
 set foldmethod=indent
-set foldlevel=2
+set foldlevel=1
 set foldnestmax=3
 set foldenable!
 
