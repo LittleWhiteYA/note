@@ -3,9 +3,7 @@ alias gst='git status'
 alias gs='git status'
 alias gcm='git commit'
 alias gcma='git commit --amend'
-alias gct='git checkout'
-alias gm='git checkout master'
-alias gcd='git checkout develop'
+alias gco='git checkout $(git branch | fzf)'
 alias gpl='git pull'
 alias gp='git push'
 alias gpt='gp --follow-tags'
@@ -34,8 +32,7 @@ alias grb='git rebase'
 alias gcpf='gcma --no-edit && gp --force-with-lease'
 alias gpf='gp --force-with-lease'
 
-alias av='cd $HOME/Project/PPAV'
-alias gj='cd $HOME/Project/goodjob'
+alias av='cd $HOME/Project/ppav'
 alias dd='cd $HOME/Project'
 alias cc='cd $HOME/yoctol'
 alias yck='yarn upgrade-interactive --latest'
@@ -43,22 +40,25 @@ alias yck='yarn upgrade-interactive --latest'
 alias up='sudo apt update'
 alias ugl='apt list --upgradable'
 alias ug='sudo apt upgrade'
+alias gbd='git branch -D $(git branch | fzf)'
 
-# Add git branch if its present to PS1
-## https://github.com/jonmosco/kube-ps1
-source $HOME/Project/note/kube-ps1.sh
-color_prompt=yes
-parse_git_branch() {
- git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
-}
+if [ -s "$HOME/Project/note/kube-ps1.sh" ]; then
+    # Add git branch if its present to PS1
+    ## https://github.com/jonmosco/kube-ps1
+    source $HOME/Project/note/kube-ps1.sh
+    color_prompt=yes
+    parse_git_branch() {
+        git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+    }
 
-if [ "$color_prompt" = yes ]; then
- PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;31m\] $(parse_git_branch) \[\033[00m\]$(kube_ps1)\n\$ '
-else
- PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(parse_git_branch)$(kube_ps1)\n\$ '
+    if [ "$color_prompt" = yes ]; then
+        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;31m\] $(parse_git_branch) \[\033[00m\]$(kube_ps1)\n\$ '
+    else
+        PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(parse_git_branch)$(kube_ps1)\n\$ '
+    fi
 fi
 
-GREP_OPTIONS='-nr --color=auto --exclude-dir=node_modules --exclude-dir=coverage --exclude-dir=.next --exclude-dir=apidoc --exclude-dir=.git --exclude=*.lock'
+GREP_OPTIONS='-nr --color=auto --exclude-dir=node_modules --exclude-dir=coverage --exclude-dir=.next --exclude-dir=apidoc --exclude-dir=.git --exclude=*.lock --exclude-dir=static --exclude-dir=__pycache__ --exclude-dir=tmp* --exclude-dir=lib'
 alias g='grep $GREP_OPTIONS'
 alias gg='grep'
 
@@ -67,7 +67,7 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
-alias open='nautilus'
+alias open='nohup nautilus . > /dev/null 2>&1 &'
 
 alias vi='vim'
 # let vim not to open new file if file does not exist.
@@ -116,7 +116,7 @@ function cd() {
 }
 
 # https://github.com/junegunn/fzf
-export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border -q !node_modules\ !lib\ '
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border -q !node_modules\ !lib\ !static\ '
 alias v='vim $(fzf)'
 alias vv='vim'
 alias vn='vim --new'
@@ -125,8 +125,14 @@ alias watch='watch '
 
 # k8s and helm
 
-source <(kubectl completion bash) # setup autocomplete in bash into the current shell, bash-completion package should be installed first.
-source <(helm completion bash)
+# setup autocomplete in bash into the current shell, bash-completion package should be installed first.
+if [ -s "$(command -v kubectl)" ]; then
+    source <(kubectl completion bash)
+fi
+
+if [ -s "$(command -v helm)" ]; then
+    source <(helm completion bash)
+fi
 
 function h() {
     if [[ "$1" == "upgrade" ]] && [[ "$@" != *"--help"* ]]
@@ -135,6 +141,13 @@ function h() {
     fi
     $(which helm) "$@"
 }
+function hgv() {
+    cmd="helm get values $(h ls $@ | fzf | awk '{ print $1 }') $@"
+    history -s hgv
+    history -s $cmd
+    # echo $cmd
+    eval "$cmd"
+}
 
 export EDITOR=vim
 
@@ -142,20 +155,65 @@ alias k='kubectl'
 alias kp='kubectl get po'
 complete -o default -o nospace -F __start_kubectl k
 alias kube='$HOME/.local/bin/kube-shell'
-alias hgv='h get values'
+function kd() {
+    cmd="k describe po $(kp | fzf | awk '{ print $1 }') $@"
+    history -s kd
+    history -s $cmd
+    echo $cmd
+    eval "$cmd"
+}
+function kdd() {
+    cmd="k delete po $(kp | fzf | awk '{ print $1 }') $@"
+    history -s kdd
+    history -s $cmd
+    echo $cmd
+    eval "$cmd"
+
+}
+function klogs() {
+    cmd="k logs $(kp | fzf | awk '{ print $1 }') $@"
+    history -s klogs
+    history -s $cmd
+    echo $cmd
+    eval "$cmd"
+}
+function kexec() {
+    cmd="k exec -it $(kp | fzf | awk '{ print $1 }') $@"
+    history -s kexec
+    history -s $cmd
+    echo $cmd
+    eval "$cmd"
+}
+function kpf() {
+    local args=("$@")
+    local namespace=$(kubectl config view --minify --output 'jsonpath={..namespace}')
+
+    # Check for `-n'.
+    for ((i = 0; i < ${#args[@]}; ++i)); do
+        echo ${args[$i]}
+        if [[ ${args[$i]} = -n ]]; then
+            namespace=${args[$i+1]}
+        fi
+    done
+
+    cmd="k port-forward $(kp -n $namespace | fzf | awk '{ print $1 }') $@"
+    history -s kpf
+    history -s $cmd
+    echo $cmd
+    eval "$cmd"
+}
 
 alias sea='kubectl config use-context yoctol-sea-1'
 alias stag='kubectl config use-context yoctol-sea-staging-1'
-alias nlu='kubectl config use-context yoctol-sea-nlu-1'
 
-source $HOME/.poetry/env
+if [ -s "$HOME/.poetry/env" ]; then
+    source $HOME/.poetry/env
+fi
 
 export PATH="$HOME/Project/git-fuzzy/bin:$PATH"
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 
 # bind 'TAB:menu-complete'
-
-alias mongo='(~/Desktop/robo3t-1.3.1-linux-x86_64-7419c406/bin/robo3t&) > /dev/null 2>&1'
 
 
