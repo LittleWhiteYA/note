@@ -1,78 +1,54 @@
-set nocompatible              " be iMproved, required
-filetype off                  " required
+set nocompatible              " be improved, required
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-    " alternatively, pass a path where Vundle should install plugins
-    "call vundle#begin('~/some/path/here')
-
-    " let Vundle manage Vundle, required
-    Plugin 'VundleVim/Vundle.vim'
-
-    " autocomplete, https://github.com/Valloric/YouCompleteMe
-    " need to compile ./install.py after install
-    Plugin 'Valloric/YouCompleteMe'
+call plug#begin('~/.vim/plugged')
+    " https://github.com/neoclide/coc.nvim
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
     " 主要功能是相同 project 的 code 在不同 editor 下能夠保持一致
     " 會讀取 .editorconfig
-    Plugin 'editorconfig/editorconfig-vim'
+    Plug 'editorconfig/editorconfig-vim'
 
     " 檢查 eslint 語法
-    Plugin 'scrooloose/syntastic'
+    Plug 'scrooloose/syntastic'
 
     " https://github.com/preservim/nerdtree
-    Plugin 'scrooloose/nerdtree'
+    Plug 'scrooloose/nerdtree'
 
     " snippet 打縮寫會自動完成 E.g. cl => console.log
-    Plugin 'SirVer/ultisnips'
+    Plug 'SirVer/ultisnips'
 
     " contains snippets files and used by SirVer/ultisnips
-    Plugin 'honza/vim-snippets'
+    Plug 'honza/vim-snippets'
 
     " https://github.com/terryma/vim-multiple-cursors
     " multiple selections
-    Plugin 'terryma/vim-multiple-cursors'
+    Plug 'terryma/vim-multiple-cursors'
 
     " show git diff
-    Plugin 'airblade/vim-gitgutter'
+    Plug 'airblade/vim-gitgutter'
 
     " https://github.com/christoomey/vim-system-copy
     " enable to copy something in vim to system clipboard
-    Plugin 'christoomey/vim-system-copy'
+    Plug 'christoomey/vim-system-copy'
 
     " https://github.com/scrooloose/nerdcommenter
-    Plugin 'scrooloose/nerdcommenter'
+    Plug 'scrooloose/nerdcommenter'
 
-    " https://github.com/leafgarland/typescript-vim
-    Plugin 'leafgarland/typescript-vim'
-
-    " black for python, https://black.readthedocs.io/en/stable/editor_integration.html
-    Plugin 'psf/black'
+    " https://black.readthedocs.io/en/stable/integrations/editors.html#vim
+    " black for python
+    Plug 'psf/black'
 
     " https://github.com/majutsushi/tagbar
-    Plugin 'majutsushi/tagbar'
+    Plug 'majutsushi/tagbar'
 
     " https://github.com/ludovicchabant/vim-gutentags
-    Plugin 'ludovicchabant/vim-gutentags'
+    Plug 'ludovicchabant/vim-gutentags'
 
     " https://github.com/google/vim-searchindex
-    Plugin 'google/vim-searchindex'
+    Plug 'google/vim-searchindex'
 
 " All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line))))
+call plug#end()
 
 "-------------------------------------------------------------------------------------------
 
@@ -183,11 +159,34 @@ let g:syntastic_check_on_wq = 0
 
 let g:syntastic_loc_list_height = 5
 
-" YCM options https://github.com/Valloric/YouCompleteMe#options
-" make YCM compatible with UltiSnips
-let g:ycm_key_list_select_completion = ['<Down>']
-let g:ycm_key_list_previous_completion = ['<Up>']
-let g:ycm_key_list_stop_completion = ['<End>']
+let g:syntastic_mode_map = { 'mode': 'passtive',
+                           \ 'active_filetypes': ['python'],
+                           \ 'passive_filetypes': ['javascript', 'typescript'] }
+
+" ======================= coc.nvim =======================
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+" personally I change to <C-Up> and <C-Down>.
+inoremap <silent><expr> <C-Down>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<C-Down>" :
+      \ coc#refresh()
+inoremap <expr><C-Up> pumvisible() ? "\<C-p>" : "\<C-Up>"
+
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" ======================= coc.nvim end =======================
 
 " better key bindings for UltiSnipsExpandTrigger
 let g:UltiSnipsExpandTrigger = '<tab>'
@@ -239,7 +238,7 @@ let g:NERDSpaceDelims = 1
 " set undofile
 
 " tagbar
-autocmd BufEnter * if &filetype != 'javascript' | call tagbar#autoopen(1)
+autocmd BufEnter * if &filetype == 'python' | call tagbar#autoopen(1)
 
 let g:tagbar_position = 'left'
 let g:tagbar_width = 30
