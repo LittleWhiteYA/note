@@ -8,7 +8,7 @@ call plug#begin('~/.vim/plugged')
     " 會讀取 .editorconfig
     Plug 'editorconfig/editorconfig-vim'
 
-    " 檢查 eslint 語法
+    " syntax check
     Plug 'scrooloose/syntastic'
 
     " https://github.com/preservim/nerdtree
@@ -38,14 +38,22 @@ call plug#begin('~/.vim/plugged')
     " black for python
     Plug 'psf/black'
 
+    " comment since 2021/07/23
     " https://github.com/majutsushi/tagbar
-    Plug 'majutsushi/tagbar'
+    " Plug 'majutsushi/tagbar'
 
+    " https://github.com/liuchengxu/vista.vim
+    Plug 'liuchengxu/vista.vim'
+
+    " comment since 2021/07/23
     " https://github.com/ludovicchabant/vim-gutentags
-    Plug 'ludovicchabant/vim-gutentags'
+    " Plug 'ludovicchabant/vim-gutentags'
 
     " https://github.com/google/vim-searchindex
     Plug 'google/vim-searchindex'
+
+    " https://github.com/iamcco/markdown-preview.nvim
+    Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
 " All of your Plugins must be added before the following line
 call plug#end()
@@ -197,7 +205,7 @@ let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 let g:UltiSnipsSnippetDirectories = ['UltiSnips', 'mySnippets']
 
 " close vim if the only window left open is a NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " Switching on spell-checking, To move to a misspelled word, use ']s' and '[s'.
 " To mark a word as good and add it to your spellfile, move your cursor to the word and enter 'zg'.
@@ -238,14 +246,58 @@ let g:NERDSpaceDelims = 1
 " set undofile
 
 " tagbar
-autocmd BufEnter * if &filetype == 'python' | call tagbar#autoopen(1)
+" autocmd BufEnter * if &filetype == 'python' | call tagbar#autoopen(1)
 
-let g:tagbar_position = 'left'
-let g:tagbar_width = 30
-let g:tagbar_sort = 0
+" let g:tagbar_position = 'left'
+" let g:tagbar_width = 30
+" let g:tagbar_sort = 0
 " https://github.com/majutsushi/tagbar/issues/568
 " waiting for https://github.com/majutsushi/tagbar/issues/635
-let g:tagbar_use_cache = 0
+" let g:tagbar_use_cache = 0
 
-let g:gutentags_project_root = ['.git']
+" let g:gutentags_project_root = ['.git']
 " let g:gutentags_trace = 1
+
+" ======================= vista.vim =======================
+function! NearestMethodOrFunction() abort
+  return get(b:, 'vista_nearest_method_or_function', '')
+endfunction
+
+set statusline+=%{NearestMethodOrFunction()}
+
+" By default vista.vim never run if you don't call it explicitly.
+"
+" If you want to show the nearest function in your statusline automatically,
+" you can add the following line to your vimrc
+autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
+
+let g:vista_sidebar_position = "vertical topleft"
+
+" close vim if the only window left open is a vista
+autocmd BufEnter * if winnr("$") == 1 && vista#sidebar#IsOpen() | q | endif
+
+" call Vista automatically when opening files
+autocmd VimEnter *.{py,js} Vista
+" typescript use coc may not open vista without sleep
+autocmd VimEnter *.ts sleep 500m | Vista
+let g:vista_stay_on_open = 0
+
+let g:vista_default_executive = 'ctags'
+
+" Set the executive for some filetypes explicitly. Use the explicit executive
+" instead of the default one for these filetypes when using `:Vista` without
+" specifying the executive.
+let g:vista_executive_for = {
+  \ 'typescript': 'coc',
+  \ }
+
+" Executive used when opening vista sidebar without specifying it.
+" See all the avaliable executives via `:echo g:vista#executives`.
+let g:vista#renderer#enable_icon = 0
+
+" let g:vista_log_file = expand('~/vista.log')
+" ======================= vista.vim end =======================
+
+" ======================= 'iamcco/markdown-preview.nvim' =======================
+let g:mkdp_refresh_slow = 1
+" ======================= 'iamcco/markdown-preview.nvim' end =======================
