@@ -40,7 +40,8 @@ alias yck='yarn upgrade-interactive --latest'
 alias up='sudo apt update'
 alias ugl='apt list --upgradable'
 alias ug='sudo apt upgrade'
-alias gbd='git branch -D $(git branch | fzf)'
+alias gbd='git branch -d $(git branch | fzf)'
+alias gbdd='git branch -D $(git branch | fzf)'
 
 if [ -s "$HOME/Project/note/kube-ps1.sh" ]; then
     # Add git branch if its present to PS1
@@ -116,12 +117,14 @@ function cd() {
 }
 
 # https://github.com/junegunn/fzf
-export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border -q !node_modules\ !lib\ !static\ '
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border -q !node_modules\ !lib\ !static\ !old\ '
+
 alias v='vim $(fzf)'
 alias vv='vim'
 alias vn='vim --new'
 alias ntla='ntl --autocomplete'
 alias watch='watch '
+alias rmm='rm $(fzf)'
 
 # k8s and helm
 
@@ -154,7 +157,6 @@ export EDITOR=vim
 alias k='kubectl'
 alias kp='kubectl get po'
 complete -o default -o nospace -F __start_kubectl k
-alias kube='$HOME/.local/bin/kube-shell'
 function kd() {
     cmd="k describe po $(kp | fzf | awk '{ print $1 }') $@"
     history -s kd
@@ -213,7 +215,9 @@ fi
 export PATH="$HOME/Project/git-fuzzy/bin:$PATH"
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
+alias k9s='docker exec -it k9s k9s'
+
+# google drive
+alias google-drive='google-drive-ocamlfuse ~/Project/ancestor-google-drive'
 
 # bind 'TAB:menu-complete'
-
-

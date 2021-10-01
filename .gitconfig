@@ -13,6 +13,8 @@
     upst = "!f() { git checkout $1; \
         git pull upstream $1; \
         git remote update --prune; }; f"
+    pr = "!f() { git fetch -fu ${2:-$(git remote |grep ^upstream || echo origin)} refs/pull/$1/head:pr/$1 && git checkout pr/$1; }; f"
+    pr-clean = "!git for-each-ref refs/heads/pr/* --format='%(refname)' | while read ref ; do branch=${ref#refs/heads/} ; git branch -D $branch ; done"
 [core]
     excludesfile = ~/.gitignore
     ; pager = ~/yoctol/diff-so-fancy/diff-so-fancy | less --tabs=4 -RFX
