@@ -38,16 +38,8 @@ call plug#begin('~/.vim/plugged')
     " black for python
     Plug 'psf/black'
 
-    " comment since 2021/07/23
-    " https://github.com/majutsushi/tagbar
-    " Plug 'majutsushi/tagbar'
-
     " https://github.com/liuchengxu/vista.vim
     Plug 'liuchengxu/vista.vim'
-
-    " comment since 2021/07/23
-    " https://github.com/ludovicchabant/vim-gutentags
-    " Plug 'ludovicchabant/vim-gutentags'
 
     " https://github.com/google/vim-searchindex
     Plug 'google/vim-searchindex'
@@ -245,19 +237,6 @@ let g:NERDSpaceDelims = 1
 " keep undo history even exit file
 " set undofile
 
-" tagbar
-" autocmd BufEnter * if &filetype == 'python' | call tagbar#autoopen(1)
-
-" let g:tagbar_position = 'left'
-" let g:tagbar_width = 30
-" let g:tagbar_sort = 0
-" https://github.com/majutsushi/tagbar/issues/568
-" waiting for https://github.com/majutsushi/tagbar/issues/635
-" let g:tagbar_use_cache = 0
-
-" let g:gutentags_project_root = ['.git']
-" let g:gutentags_trace = 1
-
 " ======================= vista.vim =======================
 function! NearestMethodOrFunction() abort
   return get(b:, 'vista_nearest_method_or_function', '')
@@ -301,3 +280,10 @@ let g:vista#renderer#enable_icon = 0
 " ======================= 'iamcco/markdown-preview.nvim' =======================
 let g:mkdp_refresh_slow = 1
 " ======================= 'iamcco/markdown-preview.nvim' end =======================
+
+
+" mac
+if has("macunix")
+    nnoremap <ESC>b b
+    nnoremap <ESC>f w
+endif
