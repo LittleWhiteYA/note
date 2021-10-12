@@ -16,26 +16,17 @@ sudo tlp start
 
 # nvm
 # https://github.com/creationix/nvm
-
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
 nvm install node
 npm install -g ntl pm2 eslint
 
 # libinput-gestures
 # https://github.com/bulletmark/libinput-gestures
 
-# Vundle
-# https://github.com/VundleVim/Vundle.vim
-
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-vim +PluginInstall +qall
-
-## YouCompleteMe
-## https://github.com/Valloric/YouCompleteMe
-sudo apt-get install build-essential cmake
-sudo apt-get install python-dev python3-dev
-source ~/.bashrc
-~/.vim/bundle/YouCompleteMe/install.py --js-completer
+# vim-plug
+# https://github.com/junegunn/vim-plug
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 ## christoomey/vim-system-copy
 ## https://github.com/christoomey/vim-system-copy
@@ -67,7 +58,7 @@ sudo apt-get update && sudo apt-get install docker-ce
 
 # docker-compose
 # https://docs.docker.com/compose/install/#install-compose
-sudo curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
 # kubectl
@@ -76,15 +67,11 @@ curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s http
 chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 
-# kube-shell
-# https://github.com/cloudnativelabs/kube-shell
-sudo apt-get install python3-pip
-pip3 install kube-shell
+## kubectl plugin
+# TODO
 
 # helm
 # https://github.com/kubernetes/helm/blob/master/docs/install.md
-curl -sL https://get.helm.sh/helm-v2.14.3-linux-amd64.tar.gz | tar zx
-sudo mv linux-amd64/helm /usr/local/bin/helm
-rm -r linux-amd64
-## helm-edit
-helm plugin install https://github.com/mstrzele/helm-edit
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+## helm-diff
+helm plugin install https://github.com/databus23/helm-diff
