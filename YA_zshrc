@@ -1,0 +1,216 @@
+# for git
+alias gst='git status'
+alias gs='git status'
+alias gcm='git commit'
+alias gcma='git commit --amend'
+alias gco='git checkout $(git branch | fzf)'
+alias gpl='git pull'
+alias gp='git push -u'
+alias gpt='gp --follow-tags'
+alias gd='git diff'
+alias gdd='git fuzzy status'
+alias gbr='git branch'
+alias gla='git log --all --decorate --oneline --graph --color'
+alias gaa='git add --all'
+alias gau='git add -u'
+# https://spin.atomicobject.com/2018/04/05/fuzzy-find-git-add/
+alias gaf='git ls-files $(git rev-parse --show-toplevel) -m --exclude-standard | fzf -m | xargs git add'
+function gupb() { # git pull and update
+    local branch
+    git branch | fzf | read branch;
+
+    echo ${branch};
+
+    git checkout ${branch};
+    git pull --rebase origin ${branch} && git remote update --prune;
+}
+alias gsh='git stash'
+alias gsp='git stash pop'
+alias grbm='git rebase master'
+alias grbc='git rebase --continue'
+alias grb='git rebase'
+alias gcpf='gcma --no-edit && gp --force-with-lease'
+alias gpf='gp --force-with-lease'
+
+alias av='cd $HOME/Project/ppav'
+alias dd='cd $HOME/Project'
+alias cc='cd $HOME/goFreight'
+alias yck='yarn upgrade-interactive --latest'
+
+alias gbd='git branch -d $(git branch --format "%(refname:short) -> %(upstream) %(upstream:track)" -v | fzf | awk '\''{ print $1 }'\'' )'
+alias gbdd='git branch -D $(git branch | fzf)'
+
+GREP_OPTIONS=(
+    -nr
+    --color=auto
+    --exclude-dir=node_modules
+    --exclude-dir=coverage
+    --exclude-dir=.next
+    --exclude-dir=apidoc
+    --exclude-dir=.git
+    --exclude="*.lock"
+    --exclude-dir=static
+    --exclude-dir=__pycache__
+    --exclude-dir="tmp*"
+)
+alias g='grep $GREP_OPTIONS'
+alias gg='grep'
+
+alias v='vim $(fzf)'
+alias vv='vim'
+alias vn='vim --new'
+function vim() {
+    local args=("$@")
+    local new=0
+
+    # let vim not to open new file if file does not exist.
+    if (( $# == 0 )); then
+        echo "I need to eat filename to open!"
+        return 1
+    fi
+
+    # Check for `--new'.
+    for ((i = 1; i <= $#; ++i)); do
+        if [[ ${args[$i]} = --new || ${args[$i]} = -n ]]; then
+            new=1
+            args[$i]=()   # Don't pass '--new' to vim.
+        fi
+    done
+
+    if ! (( new )); then
+        for file in "${args[@]}"; do
+            [[ $file = -* ]] && continue   # Ignore options.
+
+            if ! [[ -e $file ]]; then
+                printf '%s: cannot access %s: No such file or directory\n' "vim" "$file" >&2
+                return 1
+            fi
+        done
+    fi
+
+    # https://vim.fandom.com/wiki/Map_Ctrl-S_to_save_current_or_new_files
+    # 'Frozing' tty, so after any command terminal settings will be restored ttyctl -f
+    stty stop '' -ixoff
+    # Use `command` to invoke the vim binary rather than this function.
+    command vim "${args[@]}"
+}
+
+
+# ignore cd with no argument
+# https://stackoverflow.com/questions/22327883/how-to-disable-cd-command-line
+function cd() {
+    (( $# > 0)) && builtin cd "$@"
+}
+
+# https://github.com/junegunn/fzf
+# export FZF_DEFAULT_COMMAND="find . -type f"
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border -q !node_modules\ !static\ !old\ '
+
+alias ntla='ntl --autocomplete'
+alias watch='watch '
+alias rmm='rm $(fzf)'
+
+# k8s and helm
+
+export EDITOR=vim
+
+# setup autocomplete in bash into the current shell, bash-completion package should be installed first.
+# if [ -s "$(command -v kubectl)" ]; then
+    # source <(kubectl completion bash)
+# fi
+
+# if [ -s "$(command -v helm)" ]; then
+    # source <(helm completion bash)
+# fi
+
+function h() {
+    if [[ "$1" == "upgrade" ]] && [[ "$@" != *"--help"* ]]
+    then
+        helm repo update
+    fi
+    $(which helm) "$@"
+}
+function hgv() {
+    cmd="helm get values $(h ls $@ | fzf | awk '{ print $1 }') $@"
+    # FIXME: zsh history may be different
+    # history -s hgv
+    # history -s $cmd
+    # echo $cmd
+    eval "$cmd"
+}
+
+alias k='kubectl'
+alias kp='kubectl get po'
+# complete -o default -o nospace -F __start_kubectl k
+# function kd() {
+    # cmd="k describe po $(kp | fzf | awk '{ print $1 }') $@"
+    # history -s kd
+    # history -s $cmd
+    # echo $cmd
+    # eval "$cmd"
+# }
+# function kdd() {
+    # cmd="k delete po $(kp | fzf | awk '{ print $1 }') $@"
+    # history -s kdd
+    # history -s $cmd
+    # echo $cmd
+    # eval "$cmd"
+
+# }
+# function klogs() {
+    # cmd="k logs $(kp | fzf | awk '{ print $1 }') $@"
+    # history -s klogs
+    # history -s $cmd
+    # echo $cmd
+    # eval "$cmd"
+# }
+# function kexec() {
+    # cmd="k exec -it $(kp | fzf | awk '{ print $1 }') $@"
+    # history -s kexec
+    # history -s $cmd
+    # echo $cmd
+    # eval "$cmd"
+# }
+# function kpf() {
+    # local args=("$@")
+    # local namespace=$(kubectl config view --minify --output 'jsonpath={..namespace}')
+
+    # # Check for `-n'.
+    # for ((i = 0; i < ${#args[@]}; ++i)); do
+        # echo ${args[$i]}
+        # if [[ ${args[$i]} = -n ]]; then
+            # namespace=${args[$i+1]}
+        # fi
+    # done
+
+    # cmd="k port-forward $(kp -n $namespace | fzf | awk '{ print $1 }') $@"
+    # history -s kpf
+    # history -s $cmd
+    # echo $cmd
+    # eval "$cmd"
+# }
+
+# if [ -s "$HOME/.poetry/env" ]; then
+    # source $HOME/.poetry/env
+# fi
+
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+# alias k9s='docker exec -it k9s k9s'
+
+# fd - cd to selected directory
+function fd() {
+    local dir
+    dir=$(find ${1:-.} -path '*/\.*' -prune \
+        -o -type d -print 2> /dev/null | fzf +m) &&
+    cd "$dir"
+}
+\
+############## oh-my-zsh plugin ##############
+# kube-ps1
+KUBE_PS1_SYMBOL_ENABLE=false
+# add k8s cluster context, time and newline
+PROMPT=$PROMPT'$(kube_ps1) %{$fg[yellow]%}[%*]'$'\n> '
+
+alias stag='kubectl ctx eks_TRACKING-STAGE-EKS'
+alias prod='kubectl ctx eks_TRACKING-PRODUCTION-EKS'
