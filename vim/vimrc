@@ -8,17 +8,18 @@ call plug#begin('~/.vim/plugged')
     " 會讀取 .editorconfig
     Plug 'editorconfig/editorconfig-vim'
 
+    " ==================== syntastic deprecated since 2021/12/24 ========================
     " syntax check
-    Plug 'scrooloose/syntastic'
+    " Plug 'scrooloose/syntastic'
 
     " https://github.com/preservim/nerdtree
     Plug 'scrooloose/nerdtree'
 
     " snippet 打縮寫會自動完成 E.g. cl => console.log
-    Plug 'SirVer/ultisnips'
+    " Plug 'SirVer/ultisnips'
 
     " contains snippets files and used by SirVer/ultisnips
-    Plug 'honza/vim-snippets'
+    " Plug 'honza/vim-snippets'
 
     " https://github.com/terryma/vim-multiple-cursors
     " multiple selections
@@ -34,9 +35,11 @@ call plug#begin('~/.vim/plugged')
     " https://github.com/scrooloose/nerdcommenter
     Plug 'scrooloose/nerdcommenter'
 
+    " ==================== black deprecated since 2021/12/24 ========================
     " https://black.readthedocs.io/en/stable/integrations/editors.html#vim
     " black for python
-    Plug 'psf/black'
+    " vim should built with python3
+    " Plug 'psf/black'
 
     " https://github.com/liuchengxu/vista.vim
     Plug 'liuchengxu/vista.vim'
@@ -45,7 +48,13 @@ call plug#begin('~/.vim/plugged')
     Plug 'google/vim-searchindex'
 
     " https://github.com/iamcco/markdown-preview.nvim
-    Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+
+    " https://github.com/tpope/vim-fugitive
+    Plug 'tpope/vim-fugitive'
+
+    " https://github.com/hashivim/vim-terraform
+    Plug 'hashivim/vim-terraform'
 
 " All of your Plugins must be added before the following line
 call plug#end()
@@ -112,11 +121,11 @@ vnoremap <C-S> <C-C>:update<CR>
 inoremap <C-S> <C-O>:update<CR>
 
 "" 把每一行最後的空白在 :w 後自動刪掉
-" autocmd BufWritePre * :%s/\s\+$//e
+autocmd BufWritePre * :%s/\s\+$//e
 
 
 "" enable backspace key under insert mode
-"" set backspace=indent,eol,start
+set backspace=indent,eol,start
 
 "" 顯示右下角設定值
 "" set ruler
@@ -130,22 +139,15 @@ inoremap <C-S> <C-O>:update<CR>
 "" 命令模式按 Tab 自動補齊
 set wildmenu
 
-:inoremap ( ()<Esc>i
-:inoremap (<End> (<Esc>i<End>
-:inoremap () ()
-:inoremap [<CR> [<CR>]<Esc>ko
-:inoremap {<CR> {<CR>}<Esc>ko
+inoremap ( ()<Esc>i
+inoremap (<End> (<Esc>i<End>
+inoremap () ()
+inoremap [<CR> [<CR>]<Esc>ko
+inoremap {<CR> {<CR>}<Esc>ko
 
 "" 關掉 scratch 預覽
 set completeopt-=preview
 
-"" run :mes then you can debug
-" let g:syntastic_debug = 3
-
-"" Suggest
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
 " Add full file path to your existing statusline
 set statusline+=%F
 " let statusline always visible
@@ -153,28 +155,72 @@ set laststatus=2
 " modified tag
 set statusline+=\ %m
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_wq = 0
+" Switching on spell-checking, To move to a misspelled word, use ']s' and '[s'.
+" To mark a word as good and add it to your spellfile, move your cursor to the word and enter 'zg'.
+" more http://vimdoc.sourceforge.net/htmldoc/spell.html
+setlocal spell
+" The following command will let us press CTRL-N or CTRL-P in insert-mode to complete the word we’re typing!
+set complete+=kspell
 
-let g:syntastic_loc_list_height = 5
+highlight clear SpellBad
+" remove " before ctermfg will wrong spelling word to red color
+highlight SpellBad cterm=underline "ctermfg=203 guifg=#ff5f5f
 
-let g:syntastic_mode_map = { 'mode': 'passtive',
-                           \ 'active_filetypes': ['python'],
-                           \ 'passive_filetypes': ['javascript', 'typescript'] }
+" check one time after 4s of inactivity in normal mode
+set autoread
+au CursorHold * checktime
+
+" code folding
+set foldmethod=indent
+set foldlevel=1
+set foldnestmax=3
+set foldenable!
+
+set listchars=tab:→·,trail:·,extends:»,precedes:«
+set list
+
+" keep undo history even exit file
+" set undofile
+
+" ==================== syntastic deprecated since 2021/12/24 ========================
+"" run :mes then you can debug
+" let g:syntastic_debug = 3
+
+"" Suggest
+" set statusline+=%#warningmsg#
+" " set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_wq = 0
+
+" let g:syntastic_loc_list_height = 5
+
+" let g:syntastic_mode_map = { 'mode': 'passtive',
+"                            \ 'active_filetypes': ['python'],
+"                            \ 'passive_filetypes': ['javascript', 'typescript'] }
 
 " ======================= coc.nvim =======================
+
+" " Use tab for trigger completion with characters ahead and navigate.
+" " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" " other plugin before putting this into your config.
+" " personally I change to <C-Up> and <C-Down>.
+" inoremap <silent><expr> <C-Down>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<C-Down>" :
+"       \ coc#refresh()
+" inoremap <expr><C-Up> pumvisible() ? "\<C-p>" : "\<C-Up>"
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
-" personally I change to <C-Up> and <C-Down>.
-inoremap <silent><expr> <C-Down>
+inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<C-Down>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
-inoremap <expr><C-Up> pumvisible() ? "\<C-p>" : "\<C-Up>"
-
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -188,34 +234,22 @@ inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
 
 " ======================= coc.nvim end =======================
 
-" better key bindings for UltiSnipsExpandTrigger
-let g:UltiSnipsExpandTrigger = '<tab>'
-let g:UltiSnipsJumpForwardTrigger = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+" ======================= SirVer/ultisnips =======================
+" " better key bindings for UltiSnipsExpandTrigger
+" let g:UltiSnipsExpandTrigger = '<tab>'
+" let g:UltiSnipsJumpForwardTrigger = '<tab>'
+" let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 
-" :h UltiSnips-how-snippets-are-loaded
-let g:UltiSnipsSnippetDirectories = ['UltiSnips', 'mySnippets']
+" " :h UltiSnips-how-snippets-are-loaded
+" let g:UltiSnipsSnippetDirectories = ['UltiSnips', 'mySnippets']
+" ======================= SirVer/ultisnips end =======================
 
+" ======================= scrooloose/nerdtree =======================
 " close vim if the only window left open is a NERDTree
 autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" ======================= scrooloose/nerdtree end =======================
 
-" Switching on spell-checking, To move to a misspelled word, use ']s' and '[s'.
-" To mark a word as good and add it to your spellfile, move your cursor to the word and enter 'zg'.
-" more http://vimdoc.sourceforge.net/htmldoc/spell.html
-setlocal spell
-" The following command will let us press CTRL-N or CTRL-P in insert-mode to complete the word we’re typing!
-set complete+=kspell
-
-" check one time after 4s of inactivity in normal mode
-set autoread
-au CursorHold * checktime
-
-" code folding
-set foldmethod=indent
-set foldlevel=1
-set foldnestmax=3
-set foldenable!
-
+" ======================= terryma/vim-multiple-cursors =======================
 " https://github.com/terryma/vim-multiple-cursors
 " Custom mapping
 let g:multi_cursor_select_all_word_key = '<C-a>'
@@ -224,18 +258,17 @@ let g:multi_cursor_next_key            = '<C-n>'
 let g:multi_cursor_prev_key            = '<C-p>'
 let g:multi_cursor_skip_key            = '<C-x>'
 let g:multi_cursor_quit_key            = '<Esc>'
+" ======================= terryma/vim-multiple-cursors end =======================
 
-set listchars=tab:→·,trail:·,extends:»,precedes:«
-set list
-
+" ======================= airblade/vim-gitgutter =======================
 " set updatetime for vim-gitgutter
 set updatetime=1000
+" ======================= airblade/vim-gitgutter end =======================
 
+" ======================= scrooloose/nerdcommenter =======================
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1
-
-" keep undo history even exit file
-" set undofile
+" ======================= scrooloose/nerdcommenter end =======================
 
 " ======================= vista.vim =======================
 function! NearestMethodOrFunction() abort
@@ -287,3 +320,10 @@ if has("macunix")
     nnoremap <ESC>b b
     nnoremap <ESC>f w
 endif
+
+" Jenkinsfile VIM syntax highlighting
+au BufNewFile,BufRead *Jenkinsfile setf groovy
+" re = 1 will cause groovy error
+set re=0
+
+let g:terraform_fmt_on_save=1
