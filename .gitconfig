@@ -1,6 +1,6 @@
 [user]
     email = f46284628@gmail.com
-    name = LittleWhiteYA
+    name = Johnny You
 [alias]
     br = branch
     ct = checkout
@@ -20,4 +20,9 @@
 [push]
     default = current
 [pager]
-	branch = false
+    branch = false
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
