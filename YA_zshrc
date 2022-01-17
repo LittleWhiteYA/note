@@ -14,8 +14,9 @@ alias gla='git log --all --decorate --oneline --graph --color'
 alias gaa='git add --all'
 alias gau='git add -u'
 # https://spin.atomicobject.com/2018/04/05/fuzzy-find-git-add/
-alias gaf='git ls-files $(git rev-parse --show-toplevel) -m --exclude-standard | fzf -m | xargs git add'
-alias grf='git ls-files $(git rev-parse --show-toplevel) -m --exclude-standard | fzf -m | xargs git restore'
+alias gaf='git ls-files $(git rev-parse --show-toplevel) --modified --exclude-standard | fzf -m | xargs git add'
+alias gafo='git ls-files $(git rev-parse --show-toplevel) --others --exclude-standard | fzf -m | xargs git add'
+alias grf='git ls-files $(git rev-parse --show-toplevel) --modified --exclude-standard | fzf -m | xargs git restore'
 function gupb() { # git pull and update
     local branch
     git branch | fzf | read branch;
@@ -27,9 +28,8 @@ function gupb() { # git pull and update
 }
 alias gsh='git stash'
 alias gsp='git stash pop'
-alias grbm='git rebase master'
+alias grbb='git rebase $(git branch | fzf)'
 alias grbc='git rebase --continue'
-alias grb='git rebase'
 alias gcpf='gcma --no-edit && gp --force-with-lease'
 alias gpf='gp --force-with-lease'
 
@@ -58,14 +58,14 @@ GREP_OPTIONS=(
 alias g='grep $GREP_OPTIONS'
 alias gg='grep'
 
-alias v='vim $(fzf)'
+alias v='ya_vim $(fzf)'
 alias vv='vim'
-alias vn='vim --new'
-function vim() {
+alias vn='ya_vim --new'
+function ya_vim() {
+    # Goal: let vim not to open new file if file does not exist.
     local args=("$@")
     local new=0
 
-    # let vim not to open new file if file does not exist.
     if (( $# == 0 )); then
         echo "I need to eat filename to open!"
         return 1
@@ -144,53 +144,6 @@ function hgv() {
 alias k='kubectl'
 alias kp='kubectl get po'
 # complete -o default -o nospace -F __start_kubectl k
-# function kd() {
-    # cmd="k describe po $(kp | fzf | awk '{ print $1 }') $@"
-    # history -s kd
-    # history -s $cmd
-    # echo $cmd
-    # eval "$cmd"
-# }
-# function kdd() {
-    # cmd="k delete po $(kp | fzf | awk '{ print $1 }') $@"
-    # history -s kdd
-    # history -s $cmd
-    # echo $cmd
-    # eval "$cmd"
-
-# }
-# function klogs() {
-    # cmd="k logs $(kp | fzf | awk '{ print $1 }') $@"
-    # history -s klogs
-    # history -s $cmd
-    # echo $cmd
-    # eval "$cmd"
-# }
-# function kexec() {
-    # cmd="k exec -it $(kp | fzf | awk '{ print $1 }') $@"
-    # history -s kexec
-    # history -s $cmd
-    # echo $cmd
-    # eval "$cmd"
-# }
-# function kpf() {
-    # local args=("$@")
-    # local namespace=$(kubectl config view --minify --output 'jsonpath={..namespace}')
-
-    # # Check for `-n'.
-    # for ((i = 0; i < ${#args[@]}; ++i)); do
-        # echo ${args[$i]}
-        # if [[ ${args[$i]} = -n ]]; then
-            # namespace=${args[$i+1]}
-        # fi
-    # done
-
-    # cmd="k port-forward $(kp -n $namespace | fzf | awk '{ print $1 }') $@"
-    # history -s kpf
-    # history -s $cmd
-    # echo $cmd
-    # eval "$cmd"
-# }
 
 # if [ -s "$HOME/.poetry/env" ]; then
     # source $HOME/.poetry/env
@@ -207,7 +160,7 @@ function fd() {
         -o -type d -print 2> /dev/null | fzf +m) &&
     cd "$dir"
 }
-\
+
 ############## oh-my-zsh plugin ##############
 # kube-ps1
 KUBE_PS1_SYMBOL_ENABLE=false
