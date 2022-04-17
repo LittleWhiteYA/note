@@ -54,7 +54,14 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-fugitive'
 
     " https://github.com/hashivim/vim-terraform
+    " for terraform syntax highlight
     Plug 'hashivim/vim-terraform'
+
+    " https://github.com/osyo-manga/vim-brightest
+    Plug 'osyo-manga/vim-brightest'
+
+    " https://github.com/pearofducks/ansible-vim
+    Plug 'pearofducks/ansible-vim'
 
 " All of your Plugins must be added before the following line
 call plug#end()

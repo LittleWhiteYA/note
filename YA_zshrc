@@ -8,6 +8,7 @@ alias gpl='git pull'
 alias gp='git push -u'
 alias gpt='gp --follow-tags'
 alias gd='git diff'
+alias gdb='git diff $(git branch | fzf)'
 alias gdd='git fuzzy status'
 alias gbr='git branch'
 alias gla='git log --all --decorate --oneline --graph --color'
@@ -17,11 +18,17 @@ alias gau='git add -u'
 alias gaf='git ls-files $(git rev-parse --show-toplevel) --modified --exclude-standard | fzf -m | xargs git add'
 alias gafo='git ls-files $(git rev-parse --show-toplevel) --others --exclude-standard | fzf -m | xargs git add'
 alias grf='git ls-files $(git rev-parse --show-toplevel) --modified --exclude-standard | fzf -m | xargs git restore'
+alias gup='git pull --rebase && git remote update --prune'
 function gupb() { # git pull and update
     local branch
     git branch | fzf | read branch;
 
-    echo ${branch};
+    # remove string with "*"
+    if [[ ${branch} == *"*"* ]]; then
+        branch="${branch/\* /}"
+    fi
+
+    echo "branch: ${branch}";
 
     git checkout ${branch};
     git pull --rebase origin ${branch} && git remote update --prune;
@@ -39,10 +46,10 @@ alias cc='cd $HOME/goFreight'
 alias yck='yarn upgrade-interactive --latest'
 
 alias gbd='git branch -d $(git branch --format "%(refname:short) -> %(upstream) %(upstream:track)" -v | fzf | awk '\''{ print $1 }'\'' )'
-alias gbdd='git branch -D $(git branch | fzf)'
+alias gbdd='git branch -D $(git branch --format "%(refname:short) -> %(upstream) %(upstream:track)" -v | fzf | awk '\''{ print $1 }'\'')'
 
 GREP_OPTIONS=(
-    -nr
+    -nri
     --color=auto
     --exclude-dir=node_modules
     --exclude-dir=coverage
@@ -126,10 +133,10 @@ export EDITOR=vim
 # fi
 
 function h() {
-    if [[ "$1" == "upgrade" ]] && [[ "$@" != *"--help"* ]]
-    then
-        helm repo update
-    fi
+    # if [[ "$1" == "upgrade" ]] && [[ "$@" != *"--help"* ]]
+    # then
+    #     helm repo update
+    # fi
     $(which helm) "$@"
 }
 function hgv() {
@@ -168,5 +175,40 @@ KUBE_PS1_SYMBOL_ENABLE=false
 PROMPT=$PROMPT'$(kube_ps1) %{$fg[yellow]%}[%*]
 > '
 
-alias stag='kubectl ctx eks_TRACKING-STAGE-EKS'
-alias prod='kubectl ctx eks_TRACKING-PRODUCTION-EKS'
+# nnn
+# plugin path: ~/.config/nnn/plugin/xxx
+export NNN_PLUG="c:custom-cd;v:custom-vim;g:custom-grep"
+alias nnn="nnn -e"
+
+# https://github.com/jarun/nnn/wiki/Basic-use-cases#configure-cd-on-quit
+# https://github.com/jarun/nnn/blob/master/misc/quitcd/quitcd.bash_zsh
+function n () {
+    # Block nesting of nnn in subshells
+    if [ -n $NNNLVL ] && [ "${NNNLVL:-0}" -ge 1 ]; then
+        echo "nnn is already running"
+        return
+    fi
+
+    # The behaviour is set to cd on quit (nnn checks if NNN_TMPFILE is set)
+    # To cd on quit only on ^G, either remove the "export" as in:
+    #    NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+    #    (or, to a custom path: NNN_TMPFILE=/tmp/.lastd)
+    # or, export NNN_TMPFILE after nnn invocation
+    export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+
+    # Unmask ^Q (, ^V etc.) (if required, see `stty -a`) to Quit nnn
+    # stty start undef
+    # stty stop undef
+    # stty lwrap undef
+    # stty lnext undef
+
+    nnn "$@"
+
+    if [ -f "$NNN_TMPFILE" ]; then
+            . "$NNN_TMPFILE"
+            rm -f "$NNN_TMPFILE" > /dev/null
+    fi
+}
+
+# for GoFreight
+export ANSIBLE_VAULT_PASSWORD_FILE=/Users/littlewhiteya/goFreight/fms/deployment/ansible/vault-passwd
