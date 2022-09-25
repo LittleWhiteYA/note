@@ -63,6 +63,12 @@ call plug#begin('~/.vim/plugged')
     " https://github.com/pearofducks/ansible-vim
     Plug 'pearofducks/ansible-vim'
 
+    " https://github.com/jiangmiao/auto-pairs
+    Plug 'jiangmiao/auto-pairs'
+
+    " https://github.com/tpope/vim-surround
+    Plug 'tpope/vim-surround'
+
 " All of your Plugins must be added before the following line
 call plug#end()
 
@@ -146,11 +152,12 @@ set backspace=indent,eol,start
 "" 命令模式按 Tab 自動補齊
 set wildmenu
 
-inoremap ( ()<Esc>i
-inoremap (<End> (<Esc>i<End>
-inoremap () ()
-inoremap [<CR> [<CR>]<Esc>ko
-inoremap {<CR> {<CR>}<Esc>ko
+"" replace using https://github.com/jiangmiao/auto-pairs since 2022/05/19
+" inoremap ( ()<Esc>i
+" inoremap (<End> (<Esc>i<End>
+" inoremap () ()
+" inoremap [<CR> [<CR>]<Esc>ko
+" inoremap {<CR> {<CR>}<Esc>ko
 
 "" 關掉 scratch 預覽
 set completeopt-=preview
@@ -321,7 +328,6 @@ let g:vista#renderer#enable_icon = 0
 let g:mkdp_refresh_slow = 1
 " ======================= 'iamcco/markdown-preview.nvim' end =======================
 
-
 " mac
 if has("macunix")
     nnoremap <ESC>b b
@@ -329,8 +335,13 @@ if has("macunix")
 endif
 
 " Jenkinsfile VIM syntax highlighting
-au BufNewFile,BufRead *Jenkinsfile setf groovy
+au BufNewFile,BufRead *Jenkinsfile* setf groovy
 " re = 1 will cause groovy error
 set re=0
 
 let g:terraform_fmt_on_save=1
+
+" ======================= 'jiangmiao/auto-pairs' =======================
+let g:AutoPairsShortcutToggle = '<C-t>p'
+let g:AutoPairsShortcutFastWrap = '<C-r>'
+" ======================= 'jiangmiao/auto-pairs' =======================
