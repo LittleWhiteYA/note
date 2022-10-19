@@ -1,43 +1,42 @@
 version: "3.7"
 
 services:
-  rabbitmq:
-    image: rabbitmq:3.8-management
-    container_name: rabbitmq
-    restart: on-failure
-    volumes:
-      - "rabbitmq-data:/var/lib/rabbitmq"
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-    environment:
-      - RABBITMQ_DEFAULT_USER=yoctol
-      - RABBITMQ_DEFAULT_PASS=yoctol
-  postgres:
-    image: postgres:12.5
-    container_name: postgres
-    restart: on-failure
-    volumes:
-      - "pg-data:/var/lib/postgresql/data"
-    ports:
-      - "5432:5432"
+  # rabbitmq:
+  #   image: rabbitmq:3.8-management
+  #   container_name: rabbitmq
+  #   restart: on-failure
+  #   volumes:
+  #     - "rabbitmq-data:/var/lib/rabbitmq"
+  #   ports:
+  #     - "15672:15672"
+  #     - "5672:5672"
+  #   environment:
+  #     - RABBITMQ_DEFAULT_USER=yoctol
+  #     - RABBITMQ_DEFAULT_PASS=yoctol
+  # postgres:
+  #   image: postgres:12.5
+  #   container_name: postgres
+  #   restart: on-failure
+  #   volumes:
+  #     - "pg-data:/var/lib/postgresql/data"
+  #   ports:
+  #     - "5432:5432"
   mongo:
-    image: mongo:4.2
+    image: mongo:4.4
     container_name: mongo
     restart: on-failure
     volumes:
       - "mongo-data:/data/db"
     ports:
       - "27017:27017"
-    command: ["--replSet", "rs0"]
 
 volumes:
-  rabbitmq-data:
-    external:
-      name: rabbitmq-data
-  pg-data:
-    external:
-      name: pg-data
+  # rabbitmq-data:
+  #   external:
+  #     name: rabbitmq-data
+  # pg-data:
+  #   external:
+  #     name: pg-data
   mongo-data:
-    external:
-      name: mongo-data
+    external: true
+    name: mongo-data
