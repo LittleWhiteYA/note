@@ -67,6 +67,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'jiangmiao/auto-pairs'
 
     " https://github.com/tpope/vim-surround
+    " https://www.youtube.com/watch?v=NsHAG4GmZYQ&ab_channel=sarrost
     Plug 'tpope/vim-surround'
 
 " All of your Plugins must be added before the following line
@@ -341,7 +342,11 @@ set re=0
 
 let g:terraform_fmt_on_save=1
 
+
 " ======================= 'jiangmiao/auto-pairs' =======================
-let g:AutoPairsShortcutToggle = '<C-t>p'
-let g:AutoPairsShortcutFastWrap = '<C-r>'
+" π -> right option + p
+inoremap π <ESC>:call AutoPairsToggle()<CR>i
+nnoremap π :call AutoPairsToggle()<CR>
+inoremap ø <ESC><Right>:call AutoPairsFastWrap()<CR>i
+" let g:AutoPairsFlyMode = 1
 " ======================= 'jiangmiao/auto-pairs' =======================
