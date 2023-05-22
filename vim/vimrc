@@ -8,10 +8,6 @@ call plug#begin('~/.vim/plugged')
     " 會讀取 .editorconfig
     Plug 'editorconfig/editorconfig-vim'
 
-    " ==================== syntastic deprecated since 2021/12/24 ========================
-    " syntax check
-    " Plug 'scrooloose/syntastic'
-
     " https://github.com/preservim/nerdtree
     Plug 'scrooloose/nerdtree'
 
@@ -34,12 +30,6 @@ call plug#begin('~/.vim/plugged')
 
     " https://github.com/scrooloose/nerdcommenter
     Plug 'scrooloose/nerdcommenter'
-
-    " ==================== black deprecated since 2021/12/24 ========================
-    " https://black.readthedocs.io/en/stable/integrations/editors.html#vim
-    " black for python
-    " vim should built with python3
-    " Plug 'psf/black'
 
     " https://github.com/liuchengxu/vista.vim
     Plug 'liuchengxu/vista.vim'
