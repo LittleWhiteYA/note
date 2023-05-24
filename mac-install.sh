@@ -48,6 +48,9 @@ k krew install ctx konfig neat ns
 ln -s ~/Project/note/YA_zshrc ~/YA_zshrc
 ln -s ~/Project/note/vim/vimrc ~/.vimrc
 
+# create soft link for oh-my-zsh custom theme
+ln -s ~/Project/note/oh-my-zsh-ya-custom.zsh-theme ~/.oh-my-zsh/themes/oh-my-zsh-ya-custom.zsh-theme
+
 # vim-plug https://github.com/junegunn/vim-plug
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
