@@ -29,6 +29,8 @@ git clone https://github.com/paulirish/git-open.git $ZSH_CUSTOM/plugins/git-open
 #     ansible
 # )
 
+# fzf
+$(brew --prefix)/opt/fzf/install
 
 # krew
 (
@@ -54,3 +56,9 @@ ln -s ~/Project/note/oh-my-zsh-ya-custom.zsh-theme ~/.oh-my-zsh/themes/oh-my-zsh
 # vim-plug https://github.com/junegunn/vim-plug
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+# vim
+mkdir ~/.vim/after && ln -s ~/Project/note/vim/ftplugin ~/.vim/after/ftplugin
+
+# coc.nvim
+ln -s ~/Project/note/coc-settings.json ~/.vim/coc-settings.json

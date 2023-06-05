@@ -1,0 +1,18 @@
+{
+    "yaml.validate": false,
+    "python.formatting.provider": "black",
+    "coc.preferences.formatOnSaveFiletypes": ["python", "javascript"],
+    "languageserver": {
+        "terraform": {
+            "command": "terraform-ls",
+            "args": ["serve"],
+            "filetypes": [
+                "terraform",
+                "tf"
+            ],
+            "initializationOptions": {},
+            "settings": {}
+        }
+    },
+    "eslint.autoFixOnSave": true
+}
