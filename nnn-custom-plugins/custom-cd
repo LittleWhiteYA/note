@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+# ref: https://github.com/jarun/nnn/blob/master/plugins/fzcd
+
+. "$(dirname "$0")"/.nnn-plugin-helper
+
+sel=$(find . -path '*/\.*' -prune \
+    -o -type d -print 2> /dev/null | fzf +m)
+
+# Remove "./" prefix if it exists
+sel="${sel#./}"
+
+# nnn_cd should give absolute path
+nnn_cd "$PWD/$sel" +

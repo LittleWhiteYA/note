@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+
+source ~/YA_zshrc
+
+ya_vim $(fzf)

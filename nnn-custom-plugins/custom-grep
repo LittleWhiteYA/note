@@ -1,0 +1,25 @@
+#!/usr/bin/env zsh
+
+. "$(dirname "$0")"/.nnn-plugin-helper
+
+printf "pattern: "
+read -r pattern
+
+GREP_OPTIONS=(
+    -nr
+    --color=always
+    --exclude-dir=node_modules
+    --exclude-dir=coverage
+    --exclude-dir=.next
+    --exclude-dir=apidoc
+    --exclude-dir=.git
+    --exclude="\*.lock"
+    --exclude-dir=static
+    --exclude-dir=__pycache__
+    --exclude-dir="tmp\*"
+    --exclude-dir=".terraform"
+)
+
+if [ -n "$pattern" ]; then
+    grep $GREP_OPTIONS $pattern . | less
+fi
