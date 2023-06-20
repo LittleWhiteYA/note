@@ -4,6 +4,7 @@ alias gs='git status'
 alias gcm='git commit'
 alias gcma='git commit --amend'
 alias gco='git checkout $(git branch --format "%(refname:short) -> %(upstream) %(upstream:track)" -v | fzf -m | awk '\''{ print $1 }'\'')'
+alias gcor='git checkout $(git branch -v -r --format "%(refname:short)" | fzf -m | awk '\''{ sub("origin/", "", $0); print }'\'')'
 alias gpl='git pull'
 alias gp='git push -u'
 alias gpt='gp --follow-tags'
@@ -41,7 +42,6 @@ alias gpf='gp --force-with-lease'
 
 alias av='cd $HOME/Project/ppav'
 alias dd='cd $HOME/Project'
-alias cc='cd $HOME/goFreight'
 alias yck='yarn upgrade-interactive --latest'
 
 alias gbd='git branch -d $(git branch --format "%(refname:short) -> %(upstream) %(upstream:track)" -v | fzf -m | awk '\''{ print $1 }'\'')'
@@ -61,6 +61,8 @@ GREP_OPTIONS=(
     --exclude-dir=__pycache__
     --exclude-dir="tmp*"
     --exclude-dir=".terraform"
+
+    --exclude-dir="global_common"
 )
 alias g='grep $GREP_OPTIONS'
 alias gg='grep'
@@ -113,7 +115,7 @@ function cd() {
 
 # https://github.com/junegunn/fzf
 # export FZF_DEFAULT_COMMAND="find . -type f"
-export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border -q !node_modules\ !static\ !old\ '
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border -q !node_modules\ !static\ !old\ !global_common\ '
 
 alias ntla='ntl --autocomplete'
 alias watch='watch '
@@ -152,8 +154,6 @@ alias kp='kubectl get po'
 
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
-# alias k9s='docker exec -it k9s k9s'
-
 # fd - cd to selected directory
 function fd() {
     local dir
@@ -165,15 +165,17 @@ function fd() {
 ############## oh-my-zsh plugin ##############
 # kube-ps1
 KUBE_PS1_SYMBOL_ENABLE=false
-# add k8s cluster context, time and newline
-PROMPT=$PROMPT'$(kube_ps1) %{$fg[yellow]%}[%*]
+# add k8s cluster context and newline
+PROMPT=$PROMPT'$(kube_ps1) %{$fg[yellow]%}
 > '
 ############## oh-my-zsh plugin ##############
 
 # nnn
-# plugin path: ~/.config/nnn/plugin/xxx
-export NNN_PLUG="c:custom-cd;v:custom-vim;g:custom-grep"
-alias nnn="nnn -e -H"
+# plugin path: ~/.config/nnn/plugins/xxx
+export NNN_PLUG="c:custom-cd;v:custom-vim;g:custom-grep;p:preview-tui;d:diffs"
+alias nnn="nnn -e -H -A"
+## for nnn preview-tui plugin
+export NNN_FIFO="/tmp/nnn.fifo"
 
 # https://github.com/jarun/nnn/wiki/Basic-use-cases#configure-cd-on-quit
 # https://github.com/jarun/nnn/blob/master/misc/quitcd/quitcd.bash_zsh
@@ -204,3 +206,53 @@ function n () {
             rm -f "$NNN_TMPFILE" > /dev/null
     fi
 }
+
+# terraform
+alias t='terraform'
+
+# Already used local cheat
+# # cheatsheet https://github.com/chubin/cheat.sh
+# function how() { curl cht.sh/$1 }
+
+############ for OpenNet ###############
+alias cc='cd $HOME/opennet'
+k8s_ns=(
+    sportybet-international
+    sportybet-global
+    sportybet-ghana
+    sportybet-tanzania
+    sportybet-nigeria
+    sportybet-kenya
+    argocd
+    ingress-nginx
+    sporty-risk-management-ke
+    sporty-risk-management-ng
+)
+alias k-ns='k config set-context --current --namespace $(print -l $k8s_ns | fzf)'
+
+# sops
+alias sp='sops $(ls | fzf)'
+
+# update daily aws token
+function aws-update() {
+    token=$1 profile='default' user='johnny.you'; export $(AWS_SHARED_CREDENTIALS_FILE=~/.aws/credentials-backup aws --profile ${profile:-default} sts get-session-token --duration 43200 --serial-number arn:aws:iam::942878658013:mfa/${user} --token-code ${token} --query 'Credentials' | jq  "{AWS_ACCESS_KEY_ID: .AccessKeyId, AWS_SECRET_ACCESS_KEY: .SecretAccessKey, AWS_SESSION_TOKEN: .SessionToken}" | jq -r "to_entries|map(\"\(.key)=\(.value|tostring)\")|.[]")
+
+    {
+        echo '[default]'
+        echo "aws_access_key_id = $AWS_ACCESS_KEY_ID"
+        echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY"
+        echo "aws_session_token = $AWS_SESSION_TOKEN"
+        echo ''
+        echo '[942878658013]'
+        echo "aws_access_key_id = $AWS_ACCESS_KEY_ID"
+        echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY"
+        echo "aws_session_token = $AWS_SESSION_TOKEN"
+    } > ~/.aws/credentials
+
+    echo "finish!"
+    cat ~/.aws/credentials
+}
+
+export SPORTYRISK_YAML_UAT_HOME='/Users/johnnyyou/opennet/sportyrisk-yaml-uat'
+export SPORTYRISK_YAML_PROD_HOME='/Users/johnnyyou/opennet/sportyrisk-yaml-prod'
+export SPORTYBET_YAML_UAT_HOME='/Users/johnnyyou/opennet/sportybet-yaml-uat'
