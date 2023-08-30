@@ -1,7 +1,15 @@
 {
-    "yaml.validate": false,
+    "yaml": {
+        "validate": true,
+        "enable": true,
+        "completion": true,
+        "format": {
+            "enable": true
+        }
+    },
     "python.formatting.provider": "black",
-    "coc.preferences.formatOnSaveFiletypes": ["python", "javascript", "terraform"],
+    "python.formatting.blackArgs": ["--skip-string-normalization"],
+    "coc.preferences.formatOnSaveFiletypes": ["python", "javascript", "terraform", "yaml"],
     "languageserver": {
         "terraform": {
             "command": "terraform-ls",

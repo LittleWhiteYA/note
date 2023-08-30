@@ -1,0 +1,9 @@
+gui:
+  language: "en"
+  mouseEvents: false
+git:
+  paging:
+    colorArg: always
+    pager: delta --paging=never
+
+confirmOnQuit: true

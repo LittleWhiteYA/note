@@ -41,6 +41,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 
     " https://github.com/tpope/vim-fugitive
+    " This blog may help https://advancedweb.hu/dive-into-git-history-with-fugitive-vim/
     Plug 'tpope/vim-fugitive'
 
     " https://github.com/hashivim/vim-terraform

@@ -4,12 +4,13 @@ alias gs='git status'
 alias gcm='git commit'
 alias gcma='git commit --amend'
 alias gco='git checkout $(git branch --format "%(refname:short) -> %(upstream) %(upstream:track)" -v | fzf -m | awk '\''{ print $1 }'\'')'
+alias gcop='git checkout $(git branch --format "%(refname:short) -> %(upstream) %(upstream:track)" -v | fzf -m | awk '\''{ print $1 }'\'') && git pull'
 alias gcor='git checkout $(git branch -v -r --format "%(refname:short)" | fzf -m | awk '\''{ sub("origin/", "", $0); print }'\'')'
 alias gpl='git pull'
 alias gp='git push -u'
 alias gpt='gp --follow-tags'
-alias gd='git diff'
-alias gdb='git diff $(git branch | fzf)'
+alias gd='DELTA_FEATURES=+side-by-side git diff'
+alias gdb='DELTA_FEATURES=+side-by-side git diff $(git branch | fzf)'
 alias gbr='git branch'
 alias gla='git log --all --decorate --oneline --graph --color'
 alias gaa='git add --all'
@@ -70,6 +71,7 @@ alias gg='grep'
 alias v='ya_vim $(fzf)'
 alias vv='vim'
 alias vn='ya_vim --new'
+alias vd='ya_vim $(git diff --name-only | fzf -m)'
 function ya_vim() {
     # Goal: let vim not to open new file if file does not exist.
     local args=("$@")
@@ -98,6 +100,10 @@ function ya_vim() {
             fi
         done
     fi
+
+    # https://stackoverflow.com/questions/2816225/how-can-i-from-a-script-add-something-to-the-zsh-command-history
+    # Append a new history
+    print -s -- "vim ${args[@]}"
 
     # https://vim.fandom.com/wiki/Map_Ctrl-S_to_save_current_or_new_files
     # 'Frozing' tty, so after any command terminal settings will be restored ttyctl -f
@@ -214,6 +220,9 @@ alias t='terraform'
 # # cheatsheet https://github.com/chubin/cheat.sh
 # function how() { curl cht.sh/$1 }
 
+# sops
+alias sp='sops $(ls | fzf)'
+
 ############ for OpenNet ###############
 alias cc='cd $HOME/opennet'
 k8s_ns=(
@@ -230,9 +239,6 @@ k8s_ns=(
 )
 alias k-ns='k config set-context --current --namespace $(print -l $k8s_ns | fzf)'
 
-# sops
-alias sp='sops $(ls | fzf)'
-
 # update daily aws token
 function aws-update() {
     token=$1 profile='default' user='johnny.you'; export $(AWS_SHARED_CREDENTIALS_FILE=~/.aws/credentials-backup aws --profile ${profile:-default} sts get-session-token --duration 43200 --serial-number arn:aws:iam::942878658013:mfa/${user} --token-code ${token} --query 'Credentials' | jq  "{AWS_ACCESS_KEY_ID: .AccessKeyId, AWS_SECRET_ACCESS_KEY: .SecretAccessKey, AWS_SESSION_TOKEN: .SessionToken}" | jq -r "to_entries|map(\"\(.key)=\(.value|tostring)\")|.[]")
@@ -247,12 +253,22 @@ function aws-update() {
         echo "aws_access_key_id = $AWS_ACCESS_KEY_ID"
         echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY"
         echo "aws_session_token = $AWS_SESSION_TOKEN"
+        echo ''
+        echo '[942878658013-s3]'
+        echo "aws_access_key_id = $AWS_ACCESS_KEY_ID"
+        echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY"
+        echo "aws_session_token = $AWS_SESSION_TOKEN"
     } > ~/.aws/credentials
 
     echo "finish!"
     cat ~/.aws/credentials
+
+    unset AWS_ACCESS_KEY_ID
+    unset AWS_SECRET_ACCESS_KEY
+    unset AWS_SESSION_TOKEN
 }
 
 export SPORTYRISK_YAML_UAT_HOME='/Users/johnnyyou/opennet/sportyrisk-yaml-uat'
 export SPORTYRISK_YAML_PROD_HOME='/Users/johnnyyou/opennet/sportyrisk-yaml-prod'
+export SPORTYRISK_YAML_STG_HOME='/Users/johnnyyou/opennet/sportyrisk-yaml-stg'
 export SPORTYBET_YAML_UAT_HOME='/Users/johnnyyou/opennet/sportybet-yaml-uat'
