@@ -40,10 +40,11 @@ alias grbb='git rebase $(git branch | fzf)'
 alias grbc='git rebase --continue'
 alias gcpf='gcma --no-edit && gp --force-with-lease'
 alias gpf='gp --force-with-lease'
+alias go='git open'
 
 alias av='cd $HOME/Project/ppav'
 alias dd='cd $HOME/Project'
-alias yck='yarn upgrade-interactive --latest'
+alias yck='echo "use command \"ncu\" instead"'
 
 alias gbd='git branch -d $(git branch --format "%(refname:short) -> %(upstream) %(upstream:track)" -v | fzf -m | awk '\''{ print $1 }'\'')'
 alias gbdd='git branch -D $(git branch --format "%(refname:short) -> %(upstream) %(upstream:track)" -v | fzf -m | awk '\''{ print $1 }'\'')'
@@ -62,16 +63,18 @@ GREP_OPTIONS=(
     --exclude-dir=__pycache__
     --exclude-dir="tmp*"
     --exclude-dir=".terraform"
+    --exclude-dir="*.terraform"
 
     --exclude-dir="global_common"
 )
 alias g='grep $GREP_OPTIONS'
 alias gg='grep'
 
-alias v='ya_vim $(fzf)'
+alias v='ya_vim $(fzf -m)'
 alias vv='vim'
 alias vn='ya_vim --new'
 alias vd='ya_vim $(git diff --name-only | fzf -m)'
+alias vdf='vimdiff $(fzf -m)'
 function ya_vim() {
     # Goal: let vim not to open new file if file does not exist.
     local args=("$@")
@@ -121,7 +124,8 @@ function cd() {
 
 # https://github.com/junegunn/fzf
 # export FZF_DEFAULT_COMMAND="find . -type f"
-export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border -q !node_modules\ !static\ !old\ !global_common\ '
+export FZF_DEFAULT_OPTS='--height 50% --layout=reverse --border -q !node_modules\ !global_common\  --preview "echo {2..}"'
+export FZF_CTRL_R_OPTS='--height 50% --layout=reverse --border -q !node_modules\ !global_common\  --preview "echo {2..}" --preview-window "wrap"'
 
 alias ntla='ntl --autocomplete'
 alias watch='watch '
@@ -154,6 +158,8 @@ function hgv() {
 alias kp='kubectl get po'
 # complete -o default -o nospace -F __start_kubectl k
 
+alias k9='k9s --kubeconfig $(ls -d ~/.kube/* | fzf)'
+
 # if [ -s "$HOME/.poetry/env" ]; then
     # source $HOME/.poetry/env
 # fi
@@ -164,7 +170,7 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 function fd() {
     local dir
     dir=$(find ${1:-.} -path '*/\.*' -prune \
-        -o -type d -print 2> /dev/null | fzf +m) &&
+        -o \( -type d -o -type l \) -print 2> /dev/null | fzf +m) &&
     cd "$dir"
 }
 
@@ -214,7 +220,7 @@ function n () {
 }
 
 # terraform
-alias t='terraform'
+alias t='TF_DATA_DIR=./$(cd .. && git branch --show-current).terraform terraform'
 
 # Already used local cheat
 # # cheatsheet https://github.com/chubin/cheat.sh
@@ -222,6 +228,7 @@ alias t='terraform'
 
 # sops
 alias sp='sops $(ls | fzf)'
+alias spm='ls | fzf -m | xargs -t -o -n1 sops'
 
 ############ for OpenNet ###############
 alias cc='cd $HOME/opennet'
@@ -239,36 +246,143 @@ k8s_ns=(
 )
 alias k-ns='k config set-context --current --namespace $(print -l $k8s_ns | fzf)'
 
-# update daily aws token
-function aws-update() {
-    token=$1 profile='default' user='johnny.you'; export $(AWS_SHARED_CREDENTIALS_FILE=~/.aws/credentials-backup aws --profile ${profile:-default} sts get-session-token --duration 43200 --serial-number arn:aws:iam::942878658013:mfa/${user} --token-code ${token} --query 'Credentials' | jq  "{AWS_ACCESS_KEY_ID: .AccessKeyId, AWS_SECRET_ACCESS_KEY: .SecretAccessKey, AWS_SESSION_TOKEN: .SessionToken}" | jq -r "to_entries|map(\"\(.key)=\(.value|tostring)\")|.[]")
+export SPORTYRISK_YAML_UAT_HOME='/Users/johnnyyou/opennet/yaml/sportyrisk-yaml-uat'
+export SPORTYRISK_YAML_PROD_HOME='/Users/johnnyyou/opennet/yaml/sportyrisk-yaml-prod'
+export SPORTYRISK_YAML_STG_HOME='/Users/johnnyyou/opennet/yaml/sportyrisk-yaml-stg'
 
-    {
-        echo '[default]'
-        echo "aws_access_key_id = $AWS_ACCESS_KEY_ID"
-        echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY"
-        echo "aws_session_token = $AWS_SESSION_TOKEN"
-        echo ''
-        echo '[942878658013]'
-        echo "aws_access_key_id = $AWS_ACCESS_KEY_ID"
-        echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY"
-        echo "aws_session_token = $AWS_SESSION_TOKEN"
-        echo ''
-        echo '[942878658013-s3]'
-        echo "aws_access_key_id = $AWS_ACCESS_KEY_ID"
-        echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY"
-        echo "aws_session_token = $AWS_SESSION_TOKEN"
-    } > ~/.aws/credentials
+export SPORTYBET_YAML_UAT_HOME='/Users/johnnyyou/opennet/yaml/sportybet-yaml-uat'
+export SPORTYBET_YAML_PROD_HOME='/Users/johnnyyou/opennet/yaml/sportybet-yaml-prod'
+export SPORTYBET_YAML_STAGING_HOME='/Users/johnnyyou/opennet/yaml/sportybet-yaml-staging'
 
-    echo "finish!"
-    cat ~/.aws/credentials
+export SPORTYGAMES_YAML_PROD_HOME='/Users/johnnyyou/opennet/yaml/sportygames-yaml-prod'
 
-    unset AWS_ACCESS_KEY_ID
-    unset AWS_SECRET_ACCESS_KEY
-    unset AWS_SESSION_TOKEN
+## directly open related jenkins job website
+function jo() {
+    domain_prefix="https://jenkins-ms.sportybet2.com/job"
+    current_dir=`pwd`
+
+    if [[ $current_dir == *"aws"* ]]; then
+        current_country=`cd .. && git branch --show-current`
+    else
+        current_country=`git branch --show-current`
+    fi
+
+    if [[ $current_dir == *"prod1"* || $current_dir == *"uat1"* || $current_dir == *"stg1"* ]]; then
+        brand="encore"
+    elif [[ $current_dir == *"encore"* ]]; then
+        brand="encore"
+    else
+        brand="sporty"
+    fi
+
+    if [[ $current_dir == *"rds"* ]]; then
+        aws_resource="rds"
+    elif [[ $current_dir == *"elasticache"* ]]; then
+        aws_resource="elasticache"
+    elif [[ $current_dir == *"eks"* ]]; then
+        aws_resource="eks"
+    elif [[ $current_dir == *"ec2"* ]]; then
+        aws_resource="ec2"
+    elif [[ $current_dir == *"redshift"* ]]; then
+        aws_resource="redshift"
+    elif [[ $current_dir == *"glue"* ]]; then
+        aws_resource="glue"
+    elif [[ $current_dir == *"mongodb"* ]]; then
+        aws_resource="mongodb"
+    elif [[ $current_dir == *"sagemaker"* ]]; then
+        aws_resource="sagemaker"
+    elif [[ $current_dir == *"update-rocketmq-topic"* ]]; then
+        aws_resource="rocketmq"
+    fi
+
+    if [[ $current_dir == *"prod"* ]]; then
+        current_env="prod"
+    elif [[ $current_dir == *"stg"* ]]; then
+        current_env="stg"
+    else
+        current_env="uat"
+    fi
+    url="$domain_prefix/manual_infra_$current_env/job/$aws_resource/job/$brand/job/$current_country"
+
+    if [[ $current_dir == *"staging"* ]]; then
+        url="$domain_prefix/manual_infra_staging/job/sportybet/job/$current_country"
+    elif [[ $current_dir == *"component_nodegroup"* ]]; then
+        url="$domain_prefix/manual_infra_component/job/staging/job/nodegroup/job/$current_country"
+    elif [[ $current_dir == *"ssoadmin"* ]]; then
+        aws_resource="ssoadmin"
+        url="$domain_prefix/manual_infra_component/job/$aws_resource/job/$brand"
+    elif [[ $current_dir == *"secretsmanager"* ]]; then
+        aws_resource="secretsmanager"
+        url="$domain_prefix/manual_infra_component/job/$aws_resource/job/$current_country"
+    elif [[ $current_dir == *"update-rocketmq-topic"* ]]; then
+        if [[ $brand == "encore" ]]; then
+            folder="RocketMQ-Encore"
+        else
+            folder="RocketMQ-Sporty"
+        fi
+        url="https://jenkins-ms.sportybet2.com/job/manual_op_configuration/job/$current_env/job/$folder/"
+    fi
+    echo "current_env = $current_env, aws_resource = $aws_resource, current_country = $current_country"
+    echo "url = $url"
+    open "$url"
 }
 
-export SPORTYRISK_YAML_UAT_HOME='/Users/johnnyyou/opennet/sportyrisk-yaml-uat'
-export SPORTYRISK_YAML_PROD_HOME='/Users/johnnyyou/opennet/sportyrisk-yaml-prod'
-export SPORTYRISK_YAML_STG_HOME='/Users/johnnyyou/opennet/sportyrisk-yaml-stg'
-export SPORTYBET_YAML_UAT_HOME='/Users/johnnyyou/opennet/sportybet-yaml-uat'
+## directly open related service's website
+function oo() {
+    services=(
+        argocd
+        rocketmq
+        rancher
+        grafana
+        thanos
+    )
+    envs=(st uat on)
+    countries=(int ug zm tz gh ng za global od1)
+
+    echo "service:"
+    target_service=`print -l $services | fzf`
+    echo $target_service
+
+    echo "env:"
+    target_env=`print -l $envs | fzf`
+    echo $target_env
+
+    echo "country:"
+    target_country=`print -l $countries | fzf`
+    echo $target_country
+
+    if [[ $target_service == "rocketmq" ]]; then
+        open "https://rocketmq-ms-$target_country.$target_env.sportybet2.com"
+    elif [[ $target_service == "rancher" ]]; then
+        open "https://rancher.$target_env.sportybet2.com"
+    elif [[ $target_service == "argocd" ]]; then
+        if [[ $target_env == "uat" ]]; then
+            open "https://argocd-betriskgames-pub.k8s.uat.sportybet2.com/applications"
+        else
+            open "https://argocd-betrisk-$target_country.k8s.$target_env.sportybet2.com/applications"
+        fi
+    elif [[ $target_service == "grafana" ]]; then
+        if [[ $target_env == "uat" ]]; then
+            open "https://grafana-pub-uat-misc.k8s.uat.sportybet2.com/dashboards"
+        elif [[ $target_env == "st" ]]; then
+            open "https://grafana-pub-stg-misc.k8s.st.sportybet2.com/dashboards"
+        else
+            open "https://grafana-pub-uat-misc.k8s.uat.sportybet2.com/dashboards"
+        fi
+    elif [[ $target_service == "thanos" ]]; then
+        if [[ $target_env == "uat" ]]; then
+            open "https://prometheus-thanos-fe.k8s.uat.sportybet2.com/graph"
+        elif [[ $target_env == "st" ]]; then
+            open "https://prometheus-thanos-fe.k8s.st.sportybet2.com/graph"
+        else
+            open "https://prometheus-thanos-fe.k8s.on.sportybet2.com/graph"
+        fi
+    fi
+}
+
+function gcmp() {
+    echo "ticket: $1"
+    git status -s | grep "^ M" | grep global_common | awk '{ print $2 }' | xargs git add
+    git commit -m "feat: update global_common, $1"
+    git push
+}
